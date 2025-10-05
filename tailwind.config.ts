@@ -57,6 +57,14 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        clover: {
+          green: "hsl(var(--clover-green))",
+          "green-light": "hsl(var(--clover-green-light))",
+          yellow: "hsl(var(--clover-yellow))",
+          orange: "hsl(var(--clover-orange))",
+          red: "hsl(var(--clover-red))",
+          teal: "hsl(var(--clover-teal))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
