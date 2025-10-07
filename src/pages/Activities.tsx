@@ -20,33 +20,33 @@ const Activities = () => {
   const activities = [
     {
       id: 1,
-      title: "Animal U: Careers",
-      subtitle: "Animal U Careers",
+      title: "动物大学：职业探索",
+      subtitle: "动物大学职业课程",
       image: "https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=400&h=300&fit=crop",
     },
     {
       id: 2,
-      title: "Entrepreneurship: What Are the Risks?",
+      title: "创业：潜在风险是什么？",
       image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&h=300&fit=crop",
     },
     {
       id: 3,
-      title: "Entrepreneurial Skills",
+      title: "创业技能",
       image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&h=300&fit=crop",
     },
     {
       id: 4,
-      title: "Thinking Like an Entrepreneur",
+      title: "像企业家一样思考",
       image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=300&fit=crop",
     },
     {
       id: 5,
-      title: "Leadership Development",
+      title: "领导力发展",
       image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=400&h=300&fit=crop",
     },
     {
       id: 6,
-      title: "Community Service Projects",
+      title: "社区服务项目",
       image: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=400&h=300&fit=crop",
     },
   ];
@@ -67,7 +67,7 @@ const Activities = () => {
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
               <Input
-                placeholder="Search by title"
+                placeholder="按标题搜索"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-12 bg-white shadow-sm h-12"
@@ -78,26 +78,26 @@ const Activities = () => {
           {/* Filters */}
           <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
             <div className="flex flex-wrap items-center gap-4">
-              <span className="font-bold text-sm uppercase text-foreground">Filter By</span>
+              <span className="font-bold text-sm uppercase text-foreground">筛选条件</span>
               
               <Select>
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="TOPICS" />
+                  <SelectValue placeholder="主题" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Topics</SelectItem>
-                  <SelectItem value="career">Career Exploration</SelectItem>
-                  <SelectItem value="leadership">Leadership</SelectItem>
+                  <SelectItem value="all">全部主题</SelectItem>
+                  <SelectItem value="career">职业探索</SelectItem>
+                  <SelectItem value="leadership">领导力</SelectItem>
                   <SelectItem value="stem">STEM</SelectItem>
                 </SelectContent>
               </Select>
 
               <Select>
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="GRADE" />
+                  <SelectValue placeholder="年级" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Grades</SelectItem>
+                  <SelectItem value="all">全部年级</SelectItem>
                   <SelectItem value="k-3">K-3</SelectItem>
                   <SelectItem value="4-6">4-6</SelectItem>
                   <SelectItem value="7-12">7-12</SelectItem>
@@ -106,25 +106,25 @@ const Activities = () => {
 
               <Select>
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="TYPE" />
+                  <SelectValue placeholder="类型" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="activity">Activity</SelectItem>
-                  <SelectItem value="lesson">Lesson</SelectItem>
-                  <SelectItem value="project">Project</SelectItem>
+                  <SelectItem value="all">全部类型</SelectItem>
+                  <SelectItem value="activity">活动</SelectItem>
+                  <SelectItem value="lesson">课程</SelectItem>
+                  <SelectItem value="project">项目</SelectItem>
                 </SelectContent>
               </Select>
 
               <Select>
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="DURATION" />
+                  <SelectValue placeholder="时长" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Durations</SelectItem>
-                  <SelectItem value="short">Under 15 min</SelectItem>
-                  <SelectItem value="medium">15-30 min</SelectItem>
-                  <SelectItem value="long">30+ min</SelectItem>
+                  <SelectItem value="all">全部时长</SelectItem>
+                  <SelectItem value="short">15 分钟以内</SelectItem>
+                  <SelectItem value="medium">15-30 分钟</SelectItem>
+                  <SelectItem value="long">30 分钟以上</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -133,16 +133,16 @@ const Activities = () => {
           {/* Results Header */}
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold uppercase text-foreground">
-              {activities.length} Results Found
+              共找到 {activities.length} 个结果
             </h2>
             <Select defaultValue="newest">
               <SelectTrigger className="w-[140px] border-2 border-primary text-primary font-semibold">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="newest">NEWEST</SelectItem>
-                <SelectItem value="oldest">OLDEST</SelectItem>
-                <SelectItem value="popular">POPULAR</SelectItem>
+                <SelectItem value="newest">最新</SelectItem>
+                <SelectItem value="oldest">最早</SelectItem>
+                <SelectItem value="popular">最热门</SelectItem>
               </SelectContent>
             </Select>
           </div>

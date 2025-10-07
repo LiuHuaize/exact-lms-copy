@@ -9,12 +9,12 @@ export const Header = () => {
   const location = useLocation();
   
   const navItems = [
-    { name: "HOME", path: "/" },
-    { name: "ACTIVITIES", path: "/activities" },
-    { name: "LEADERBOARD", path: "/leaderboard" },
-    { name: "PROGRESS", path: "/progress" },
-    { name: "EVENTS", path: "/events" },
-    { name: "RESOURCES", path: "/resources" },
+    { name: "首页", path: "/" },
+    { name: "课程活动", path: "/activities" },
+    { name: "排行榜", path: "/leaderboard" },
+    { name: "学习进度", path: "/progress" },
+    { name: "活动日程", path: "/events" },
+    { name: "学习资源", path: "/resources" },
   ];
 
   const isActive = (path: string) => {
@@ -44,7 +44,7 @@ export const Header = () => {
 
           <div className="flex items-center gap-4">
             <div className="bg-clover-teal text-white px-3 py-1 rounded-full text-sm font-semibold">
-              LVL 2
+              等级 2
             </div>
             <Avatar>
               <AvatarFallback className="bg-clover-orange text-white">H</AvatarFallback>

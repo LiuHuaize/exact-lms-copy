@@ -15,14 +15,13 @@ const Index = () => {
         <div className="container mx-auto px-4 py-20">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Welcome to <span className="text-clover-green">CLOVER</span>
+              欢迎来到 <span className="text-clover-green">CLOVER</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-8">
-              Your learning management system powered by 4-H
+              由 4-H 驱动的学习管理系统
             </p>
             <p className="text-lg mb-12 max-w-2xl mx-auto">
-              Explore hands-on activities, develop new skills, and grow as a leader through 
-              engaging entrepreneurial and career development programs.
+              通过参与创业与职业发展课程，探索动手活动、培养新技能，并成长为领导者。
             </p>
             
             <div className="flex flex-wrap gap-4 justify-center">
@@ -31,7 +30,7 @@ const Index = () => {
                 className="bg-primary hover:bg-primary/90 text-lg px-8"
                 onClick={() => navigate("/activities")}
               >
-                Explore Activities
+                浏览课程活动
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
               <Button 
@@ -39,7 +38,7 @@ const Index = () => {
                 variant="outline"
                 className="text-lg px-8"
               >
-                View Progress
+                查看学习进度
               </Button>
             </div>
           </div>
@@ -53,9 +52,9 @@ const Index = () => {
                 <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl text-white">📚</span>
                 </div>
-                <h3 className="font-bold text-lg mb-2">Interactive Learning</h3>
+                <h3 className="font-bold text-lg mb-2">互动学习</h3>
                 <p className="text-muted-foreground">
-                  Engage with multimedia content and hands-on activities
+                  通过多媒体内容与动手实践保持投入
                 </p>
               </div>
               
@@ -63,9 +62,9 @@ const Index = () => {
                 <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl text-white">🎯</span>
                 </div>
-                <h3 className="font-bold text-lg mb-2">Track Progress</h3>
+                <h3 className="font-bold text-lg mb-2">追踪进度</h3>
                 <p className="text-muted-foreground">
-                  Monitor your achievements and celebrate milestones
+                  记录你的成果，庆祝每一个里程碑
                 </p>
               </div>
               
@@ -73,9 +72,9 @@ const Index = () => {
                 <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl text-white">🏆</span>
                 </div>
-                <h3 className="font-bold text-lg mb-2">Earn Recognition</h3>
+                <h3 className="font-bold text-lg mb-2">赢得认可</h3>
                 <p className="text-muted-foreground">
-                  Level up and compete on the leaderboard
+                  提升等级，在排行榜上争夺荣誉
                 </p>
               </div>
             </div>

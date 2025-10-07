@@ -14,7 +14,7 @@ export const Logo = () => {
           <span className="text-clover-red">R</span>
         </span>
       </div>
-      <span className="text-xs text-muted-foreground ml-1">by 4-H</span>
+      <span className="text-xs text-muted-foreground ml-1">来自 4-H</span>
     </div>
   );
 };

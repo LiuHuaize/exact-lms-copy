@@ -19,10 +19,10 @@ const ActivityLearn = () => {
   const { id } = useParams();
 
   const lessons = [
-    { title: "Getting Started", completed: true },
-    { title: "What Does it Take to Be an Entrepreneur?", completed: true },
-    { title: "Your Entrepreneurial Characteristics", completed: true },
-    { title: "Go Beyond", completed: false },
+    { title: "准备开始", completed: true },
+    { title: "成为企业家需要具备什么？", completed: true },
+    { title: "你的创业特质", completed: true },
+    { title: "更进一步", completed: false },
   ];
 
   return (
@@ -34,20 +34,20 @@ const ActivityLearn = () => {
             <Logo />
             <button className="hidden lg:flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               <Search className="w-4 h-4" />
-              Search
+              搜索
             </button>
           </div>
           <div className="flex items-center gap-6">
             <div className="hidden lg:flex items-center gap-2 text-sm font-semibold text-muted-foreground">
               <ArrowUp className="w-4 h-4" />
-              <span>Home</span>
+              <span>返回主页</span>
             </div>
             <Button
               variant="ghost"
               className="font-bold text-base hover:bg-transparent"
               onClick={() => navigate(`/activities/${id}`)}
             >
-              EXIT ACTIVITY
+              退出活动
               <X className="ml-2 w-5 h-5" />
             </Button>
           </div>
@@ -62,13 +62,13 @@ const ActivityLearn = () => {
             {/* Activity Title & Progress */}
             <div className="p-6 border-b border-white/10">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold">Entrepreneurial Skills</h2>
+                <h2 className="text-lg font-semibold">创业技能</h2>
                 <Menu className="w-5 h-5 text-white/60" />
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs font-semibold tracking-wider">
-                  <span>75% COMPLETE</span>
-                  <span className="text-white/80">3 of 4</span>
+                  <span>完成 75%</span>
+                  <span className="text-white/80">3 / 4</span>
                 </div>
                 <Progress value={75} className="h-2 bg-white/10" />
               </div>
@@ -85,7 +85,7 @@ const ActivityLearn = () => {
                     key={index}
                     className={`group w-full text-left px-4 py-4 rounded-[18px] transition-all border ${
                       isActive
-                        ? "bg-white text-gray-900 shadow-lg border-white"
+                        ? "bg-white text-foreground shadow-lg border-white"
                         : "bg-white/5 border-white/10 text-white/90 hover:bg-white/10"
                     }`}
                   >
@@ -102,7 +102,7 @@ const ActivityLearn = () => {
                         <p className={`text-xs mt-1 ${
                           isActive ? "text-muted-foreground" : "text-white/60"
                         }`}>
-                          {isActive ? "Lesson 1 of 4" : lesson.completed ? "Completed" : "In progress"}
+                          {isActive ? "第 1 课，共 4 课" : lesson.completed ? "已完成" : "进行中"}
                         </p>
                       </div>
                       <Icon className={`w-4 h-4 ${lesson.completed ? "text-clover-green" : "text-white/50"}`} />
@@ -119,10 +119,10 @@ const ActivityLearn = () => {
             </div>
           </aside>
 
-          {/* Main Content Area - Independent scroll */}
-          <main className="flex-1 h-full flex flex-col">
+          {/* Main Content Area - Scrollable */}
+          <main className="flex-1 h-full overflow-y-auto bg-muted flex flex-col">
             {/* Hero section */}
-            <div className="relative overflow-hidden">
+            <div className="relative overflow-hidden flex-shrink-0">
               <div className="absolute inset-0">
                 <img
                   src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=2000&q=80"
@@ -135,16 +135,16 @@ const ActivityLearn = () => {
                 <div className="flex items-center justify-between gap-6">
                   <div className="flex flex-col gap-4">
                     <span className="text-sm font-semibold tracking-[0.3em] uppercase text-white/70">
-                      Lesson 1 of 4
+                      第 1 课，共 4 课
                     </span>
-                    <h1 className="text-4xl lg:text-5xl font-bold tracking-tight">Getting Started</h1>
+                    <h1 className="text-4xl lg:text-5xl font-bold tracking-tight">准备开始</h1>
                     <p className="text-base max-w-xl text-white/70">
-                      Select the play button to hear the audio and dive into entrepreneurial thinking.
+                      点击播放按钮收听音频，投入创业思维的世界。
                     </p>
                   </div>
                   <div className="hidden lg:flex items-center gap-3 text-sm font-medium text-white/80">
                     <ArrowUp className="w-4 h-4" />
-                    <span>Back to modules</span>
+                    <span>返回模块</span>
                   </div>
                 </div>
               </div>
@@ -155,16 +155,15 @@ const ActivityLearn = () => {
             </div>
 
             {/* Scrollable content */}
-            <div className="flex-1 overflow-y-auto bg-muted">
-              <section className="px-10 py-12">
-                <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-lg p-8">
-                  <div className="flex flex-col gap-8">
+            <section className="px-10 py-12">
+              <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-lg p-8">
+                <div className="flex flex-col gap-8">
                     <div className="flex flex-wrap items-center justify-between gap-4">
                       <p className="text-sm text-muted-foreground">
-                        Select the play button to hear the audio.
+                        选择播放按钮即可收听音频。
                       </p>
                       <span className="text-xs font-semibold tracking-[0.3em] text-clover-green uppercase">
-                        Audio Lesson
+                        音频课程
                       </span>
                     </div>
                     <div className="flex flex-wrap items-center gap-5">
@@ -177,10 +176,10 @@ const ActivityLearn = () => {
                       <div className="flex-1 min-w-[200px] h-1.5 bg-muted rounded-full overflow-hidden">
                         <div className="h-full w-[45%] bg-clover-green" />
                       </div>
-                      <span className="text-sm font-medium text-muted-foreground min-w-[40px] text-right">
-                        0:47
-                      </span>
-                      <span className="text-sm font-medium text-muted-foreground">1x</span>
+                    <span className="text-sm font-medium text-muted-foreground min-w-[40px] text-right">
+                      0:47
+                    </span>
+                    <span className="text-sm font-medium text-muted-foreground">1x</span>
                       <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-primary hover:bg-primary/10 h-10 w-10 rounded-full">
                         <Volume2 className="w-5 h-5" />
                       </Button>
@@ -203,10 +202,10 @@ const ActivityLearn = () => {
                   </div>
                   <div className="space-y-5 text-lg leading-relaxed text-muted-foreground">
                     <p>
-                      Thanks for joining us here on CLOVER today! We are excited you are here to learn how to think like an entrepreneur.
+                      感谢你今天加入 CLOVER！我们很高兴与你一起学习如何像企业家一样思考。
                     </p>
                     <p>
-                      This lesson is all about curiosity, creativity, and spotting opportunities in the everyday moments around you.
+                      本课围绕好奇心、创造力以及在日常生活中发现机会的能力展开。
                     </p>
                   </div>
                 </div>
@@ -216,20 +215,20 @@ const ActivityLearn = () => {
                 <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-lg p-10 grid lg:grid-cols-[1fr_320px] gap-12 items-center">
                   <div>
                     <h2 className="text-2xl font-semibold text-foreground mb-6">
-                      By the end of this activity, you will be able to:
+                      完成本活动后，你将能够：
                     </h2>
                     <ul className="space-y-4 text-base text-muted-foreground">
                       <li className="flex items-start gap-3">
                         <span className="mt-1 inline-block h-2 w-2 rounded-full bg-clover-green" />
-                        <span>Identify your talents, interests, and hobbies.</span>
+                        <span>识别自己的才能、兴趣与爱好。</span>
                       </li>
                       <li className="flex items-start gap-3">
                         <span className="mt-1 inline-block h-2 w-2 rounded-full bg-clover-green" />
-                        <span>Determine the entrepreneurial skills you already have to launch an idea.</span>
+                        <span>明确自己已经具备哪些创业技能以启动创意。</span>
                       </li>
                       <li className="flex items-start gap-3">
                         <span className="mt-1 inline-block h-2 w-2 rounded-full bg-clover-green" />
-                        <span>Craft an elevator pitch that sparks curiosity.</span>
+                        <span>打造一段激发好奇心的电梯演讲。</span>
                       </li>
                     </ul>
                   </div>
@@ -247,11 +246,11 @@ const ActivityLearn = () => {
                 <div className="max-w-6xl mx-auto bg-gradient-to-br from-[#0c5d52] via-[#0a514f] to-[#083d3b] rounded-[40px] text-white overflow-hidden shadow-2xl">
                   <div className="px-10 py-16 text-center">
                     <p className="text-sm uppercase tracking-[0.4em] text-white/70 mb-6">
-                      Gather Supplies
+                      准备材料
                     </p>
-                    <h2 className="text-4xl lg:text-5xl font-bold mb-6">What Does it Take to Be an Entrepreneur?</h2>
+                    <h2 className="text-4xl lg:text-5xl font-bold mb-6">成为企业家需要具备什么？</h2>
                     <p className="text-base max-w-3xl mx-auto text-white/80">
-                      Once you have identified a problem worth solving, it is time to gather inspiration and resources that bring your idea to life.
+                      一旦确认值得解决的问题，就该收集灵感与资源，让你的创意成真。
                     </p>
                   </div>
                 </div>
@@ -268,13 +267,13 @@ const ActivityLearn = () => {
                   </div>
                   <div className="space-y-5 text-base leading-relaxed text-muted-foreground">
                     <p>
-                      Once you have a business idea, you will need a memorable way to describe it to future customers and supporters.
+                      当你拥有一个商业创意时，需要用令人难忘的方式向潜在客户和支持者介绍它。
                     </p>
                     <p>
-                      Your elevator pitch should highlight the problem you are solving, the spark behind your solution, and the value it delivers.
+                      你的电梯演讲应突出要解决的问题、灵感来源以及能够创造的价值。
                     </p>
                     <p className="font-semibold text-foreground">
-                      Keep it concise, conversational, and confident.
+                      保持内容简洁、自然并充满自信。
                     </p>
                   </div>
                 </div>
@@ -282,20 +281,19 @@ const ActivityLearn = () => {
 
               <section className="px-10 pb-20">
                 <div className="max-w-4xl mx-auto bg-white rounded-[36px] shadow-xl p-12 text-center space-y-6">
-                  <h3 className="text-3xl lg:text-4xl font-bold text-foreground">Go Beyond</h3>
+                  <h3 className="text-3xl lg:text-4xl font-bold text-foreground">更进一步</h3>
                   <p className="text-lg text-muted-foreground">
-                    Continue your entrepreneurial journey with bonus challenges, reflection prompts, and real-world examples from young innovators like you.
+                    通过额外挑战、自我反思提示以及与你一样的青年创新者案例，继续你的创业之旅。
                   </p>
                   <Button
                     size="lg"
                     className="px-10 py-6 text-base font-semibold rounded-full"
                     onClick={() => navigate(`/activities/${id}`)}
                   >
-                    Complete Activity
+                    完成活动
                   </Button>
                 </div>
               </section>
-            </div>
           </main>
         </div>
       </div>
