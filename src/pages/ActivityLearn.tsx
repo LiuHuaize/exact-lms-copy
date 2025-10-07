@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
 import { Progress } from "@/components/ui/progress";
-import { X, Menu, Search, Play, Volume2, List, CheckCircle } from "lucide-react";
+import { X, Play, Volume2, List, CheckCircle } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const ActivityLearn = () => {
@@ -16,9 +16,9 @@ const ActivityLearn = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="h-screen bg-background flex flex-col overflow-hidden">
       {/* Top Bar */}
-      <div className="bg-white border-b border-border px-6 py-3 flex items-center justify-between">
+      <div className="bg-white border-b border-border px-6 py-3 flex items-center justify-between flex-shrink-0">
         <Logo />
         <Button 
           variant="ghost" 
@@ -30,49 +30,40 @@ const ActivityLearn = () => {
         </Button>
       </div>
 
-      {/* Main scrolling container for both sidebar and content */}
-      <div className="flex flex-1 overflow-y-auto">
-        <div className="flex w-full">
-          {/* Left Sidebar - Scrolls with content */}
-          <div className="w-[280px] bg-primary text-primary-foreground flex-shrink-0 sticky top-0 h-fit">
+      {/* Main container with fixed layout */}
+      <div className="flex flex-1 overflow-hidden">
+        <div className="flex w-full h-full">
+          {/* Left Sidebar - Fixed with independent scroll */}
+          <div className="w-[360px] bg-primary text-primary-foreground flex-shrink-0 h-full overflow-y-auto shadow-xl border-r border-white/10">
             {/* Activity Title & Progress */}
-            <div className="p-5 border-b border-white/20">
-              <h2 className="text-base font-normal mb-4">Entrepreneurial Skills</h2>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs font-bold tracking-wider">
+            <div className="p-6 border-b border-white/20">
+              <h2 className="text-xl font-semibold mb-6">Entrepreneurial Skills</h2>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-sm font-bold tracking-wider">
                   <span>0% COMPLETE</span>
                 </div>
-                <Progress value={0} className="h-2 bg-white/20" />
+                <Progress value={0} className="h-3 bg-white/20" />
               </div>
             </div>
 
-            {/* Lesson Navigation */}
-            <div className="p-3 border-b border-white/10">
-              <Button variant="ghost" size="icon" className="w-full justify-start text-white hover:bg-white/10 mb-1 h-9">
-                <Search className="w-4 h-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="w-full justify-start text-white hover:bg-white/10 h-9">
-                <Menu className="w-4 h-4" />
-              </Button>
-            </div>
-
-            <div className="px-2 py-2 space-y-1">
+            {/* Lesson List */}
+            <div className="px-3 py-3 space-y-2">
               {lessons.map((lesson, index) => (
                 <button
                   key={index}
-                  className={`w-full text-left px-3 py-2.5 rounded transition-colors ${
-                    index === 0 ? 'bg-white text-foreground' : 'text-white hover:bg-white/10'
+                  className={`w-full text-left px-5 py-4 rounded-lg transition-all ${
+                    index === 0 ? 'bg-white text-foreground shadow-md' : 'text-white hover:bg-white/10'
                   }`}
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <div className="flex-shrink-0">
-                      <List className="w-4 h-4" />
+                      <List className="w-5 h-5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-normal">{lesson.title}</div>
+                      <div className="text-base font-medium">{lesson.title}</div>
                     </div>
                     {lesson.completed && (
-                      <CheckCircle className="w-4 h-4 flex-shrink-0 text-clover-green" />
+                      <CheckCircle className="w-5 h-5 flex-shrink-0 text-clover-green" />
                     )}
                   </div>
                 </button>
@@ -80,8 +71,8 @@ const ActivityLearn = () => {
             </div>
           </div>
 
-          {/* Main Content Area - Long Scrolling Page */}
-          <div className="flex-1 bg-primary">
+          {/* Main Content Area - Independent scroll */}
+          <div className="flex-1 bg-primary h-full overflow-y-auto">
             <div className="w-full">
             {/* Section 1: Getting Started - Centered Title */}
             <section className="flex flex-col bg-primary text-white px-8 py-8 min-h-[60vh]">
