@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
 import { Progress } from "@/components/ui/progress";
-import { X, Play, Volume2, List, CheckCircle } from "lucide-react";
+import { X, Play, Volume2, List, ArrowUp } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const ActivityLearn = () => {
@@ -34,36 +34,36 @@ const ActivityLearn = () => {
       <div className="flex flex-1 overflow-hidden">
         <div className="flex w-full h-full">
           {/* Left Sidebar - Fixed with independent scroll */}
-          <div className="w-[360px] bg-primary text-primary-foreground flex-shrink-0 h-full overflow-y-auto shadow-xl border-r border-white/10">
+          <div className="w-[360px] bg-[#0a4a4a] text-white flex-shrink-0 h-full overflow-y-auto shadow-xl border-r border-white/10">
             {/* Activity Title & Progress */}
             <div className="p-6 border-b border-white/20">
-              <h2 className="text-xl font-semibold mb-6">Entrepreneurial Skills</h2>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-sm font-bold tracking-wider">
+              <h2 className="text-lg font-semibold mb-5">Entrepreneurial Skills</h2>
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between text-xs font-bold tracking-wider">
                   <span>0% COMPLETE</span>
                 </div>
-                <Progress value={0} className="h-3 bg-white/20" />
+                <Progress value={0} className="h-2.5 bg-white/20" />
               </div>
             </div>
 
             {/* Lesson List */}
-            <div className="px-3 py-3 space-y-2">
+            <div className="px-3 py-4 space-y-2">
               {lessons.map((lesson, index) => (
                 <button
                   key={index}
-                  className={`w-full text-left px-5 py-4 rounded-lg transition-all ${
-                    index === 0 ? 'bg-white text-foreground shadow-md' : 'text-white hover:bg-white/10'
+                  className={`w-full text-left px-4 py-3.5 rounded-xl transition-all ${
+                    index === 0 ? 'bg-[#f0f0f0] text-gray-900 shadow-sm' : 'bg-white/5 text-white hover:bg-white/10'
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <div className="flex-shrink-0">
-                      <List className="w-5 h-5" />
+                      <List className="w-4 h-4" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-base font-medium">{lesson.title}</div>
+                      <div className="text-sm font-normal">{lesson.title}</div>
                     </div>
                     {lesson.completed && (
-                      <CheckCircle className="w-5 h-5 flex-shrink-0 text-clover-green" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-clover-green flex-shrink-0" />
                     )}
                   </div>
                 </button>
@@ -72,13 +72,19 @@ const ActivityLearn = () => {
           </div>
 
           {/* Main Content Area - Independent scroll */}
-          <div className="flex-1 bg-primary h-full overflow-y-auto">
-            <div className="w-full">
+          <div className="flex-1 h-full flex flex-col">
+            {/* Top navigation bar */}
+            <div className="bg-gray-100 px-8 py-4 flex items-center justify-center border-b border-gray-200 flex-shrink-0">
+              <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                <ArrowUp className="w-4 h-4" />
+                <span>1 of 4 — Getting Started</span>
+              </div>
+            </div>
+
+            {/* Scrollable content */}
+            <div className="flex-1 overflow-y-auto bg-primary">
             {/* Section 1: Getting Started - Centered Title */}
             <section className="flex flex-col bg-primary text-white px-8 py-8 min-h-[60vh]">
-              <div className="flex justify-end mb-6">
-                <p className="text-sm tracking-widest font-normal">LESSON 1 OF 4</p>
-              </div>
               <div className="flex-1 flex items-center justify-center">
                 <h1 className="text-7xl lg:text-8xl font-bold">Getting Started</h1>
               </div>
