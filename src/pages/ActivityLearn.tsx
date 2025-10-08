@@ -125,16 +125,6 @@ const ActivityLearn = () => {
     setActiveDrag(null);
   };
 
-  const handleResetQuiz = () => {
-    setPlacedOptions(
-      quizTargets.reduce((acc, target) => {
-        acc[target.id] = null;
-        return acc;
-      }, {} as Record<string, string | null>)
-    );
-    setFeedback(null);
-  };
-
   return (
     <div className="h-screen bg-muted flex flex-col overflow-hidden">
       {/* Top Bar */}
@@ -290,7 +280,7 @@ const ActivityLearn = () => {
 
               <section className="px-10 pb-12">
                 <div className="max-w-5xl mx-auto grid lg:grid-cols-[minmax(280px,320px)_1fr] gap-10 items-center">
-                  <figure className="space-y-4">
+                  <figure className="space-y-6">
                     <div className="rounded-[30px] overflow-hidden shadow-xl">
                       <div className="aspect-square">
                         <img
@@ -300,7 +290,7 @@ const ActivityLearn = () => {
                         />
                       </div>
                     </div>
-                    <figcaption className="text-sm text-muted-foreground border-l-2 border-clover-green pl-4">
+                    <figcaption className="text-base leading-relaxed text-muted-foreground border-l-2 border-clover-green pl-5">
                       用全新视角观察身边的故事，寻找待解决的问题。
                     </figcaption>
                   </figure>
@@ -377,7 +367,7 @@ const ActivityLearn = () => {
                       </li>
                     </ul>
                   </div>
-                  <figure className="space-y-4">
+                  <figure className="space-y-6">
                     <div className="rounded-3xl overflow-hidden shadow-lg">
                       <div className="aspect-square">
                         <img
@@ -387,7 +377,7 @@ const ActivityLearn = () => {
                         />
                       </div>
                     </div>
-                    <figcaption className="text-sm text-muted-foreground border-l-2 border-clover-green/70 pl-4">
+                    <figcaption className="text-base leading-relaxed text-muted-foreground border-l-2 border-clover-green/70 pl-5">
                       与团队共创时，随手记录能够推动创意的亮点。
                     </figcaption>
                   </figure>
@@ -410,7 +400,7 @@ const ActivityLearn = () => {
 
               <section className="px-10 pb-16">
                 <div className="max-w-5xl mx-auto grid lg:grid-cols-[minmax(280px,320px)_1fr] gap-12 items-center">
-                  <figure className="space-y-4">
+                  <figure className="space-y-6">
                     <div className="rounded-[32px] overflow-hidden shadow-xl">
                       <div className="aspect-square">
                         <img
@@ -420,7 +410,7 @@ const ActivityLearn = () => {
                         />
                       </div>
                     </div>
-                    <figcaption className="text-sm text-muted-foreground border-l-2 border-clover-green/70 pl-4">
+                    <figcaption className="text-base leading-relaxed text-muted-foreground border-l-2 border-clover-green/70 pl-5">
                       让视觉素材保持呼吸感，更好地聚焦关键信息。
                     </figcaption>
                   </figure>
@@ -441,25 +431,16 @@ const ActivityLearn = () => {
               <section className="px-10 pb-16">
                 <div className="max-w-6xl mx-auto space-y-8">
                   <div className="bg-white rounded-[36px] shadow-xl p-10">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
-                      <div className="space-y-2">
-                        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-clover-green">
-                          互动卡片
-                        </span>
-                        <h3 className="text-2xl font-semibold text-foreground">
-                          翻转卡片掌握核心问题
-                        </h3>
-                        <p className="text-sm text-muted-foreground max-w-xl">
-                          每张卡片都是创业故事中的关键节点。先思考，再翻转，看看实战经验给出的提示。
-                        </p>
-                      </div>
-                      <Button
-                        variant="outline"
-                        className="rounded-full text-sm font-medium"
-                        onClick={() => setFlippedState({})}
-                      >
-                        重置状态
-                      </Button>
+                    <div className="space-y-2 mb-10">
+                      <span className="text-xs font-semibold uppercase tracking-[0.3em] text-clover-green">
+                        互动卡片
+                      </span>
+                      <h3 className="text-2xl font-semibold text-foreground">
+                        翻转卡片掌握核心问题
+                      </h3>
+                      <p className="text-sm text-muted-foreground max-w-xl">
+                        每张卡片都是创业故事中的关键节点。先思考，再翻转，看看实战经验给出的提示。
+                      </p>
                     </div>
                     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                       {flipCards.map((card, index) => {
@@ -503,11 +484,11 @@ const ActivityLearn = () => {
                         匹配创意打磨的 3 个步骤
                       </h3>
                       <p className="text-sm text-muted-foreground max-w-2xl">
-                        将下方选项拖拽到对应环节。按照从上到下的顺序完成匹配，再用一两句话总结创意的下一步行动。
+                        将下方选项拖拽到对应环节。完成匹配后，用一两句话总结创意的下一步行动。
                       </p>
                     </div>
-                    <div className="space-y-6">
-                      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="space-y-10">
+                      <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-3 lg:justify-items-center">
                         {quizOptions.map((option) => {
                           const isUsed = Object.values(placedOptions).includes(option.label);
                           return (
@@ -515,7 +496,7 @@ const ActivityLearn = () => {
                               key={option.id}
                               draggable={!isUsed}
                               onDragStart={() => handleDragStart(option.id)}
-                              className={`rounded-3xl px-5 py-4 text-sm font-medium transition ${
+                              className={`w-full lg:w-auto lg:justify-self-center rounded-full px-6 py-3 text-sm font-medium text-center transition ${
                                 isUsed
                                   ? "bg-muted text-muted-foreground border border-dashed border-muted-foreground/30 cursor-not-allowed"
                                   : "bg-white border border-muted-foreground/20 shadow-sm hover:shadow-md cursor-grab active:cursor-grabbing"
@@ -526,33 +507,31 @@ const ActivityLearn = () => {
                           );
                         })}
                       </div>
-                      <div className="space-y-5">
+                      <div className="grid gap-6 lg:grid-cols-3">
                         {quizTargets.map((target, index) => (
                           <div
                             key={target.id}
                             onDragOver={(event) => event.preventDefault()}
                             onDrop={() => handleDrop(target.id)}
-                            className="rounded-[32px] border-2 border-dashed border-[#0f6a60]/40 bg-[#f6fbf9] px-6 py-5 flex flex-col gap-3 transition hover:border-[#0f6a60]/80"
+                            className="rounded-[28px] border-2 border-dashed border-[#0f6a60]/40 bg-[#f6fbf9] px-6 py-8 flex flex-col items-center text-center gap-4 transition hover:border-[#0f6a60]/80"
                           >
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-[#0f6a60]/40 text-sm font-semibold text-[#0f6a60]">
-                                  {index + 1}
-                                </span>
-                                <h4 className="text-base font-semibold text-foreground">{target.title}</h4>
-                              </div>
-                              <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[#0f6a60]">
-                                拖到这里
+                            <div className="inline-flex items-center gap-3">
+                              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-[#0f6a60]/40 text-sm font-semibold text-[#0f6a60]">
+                                {index + 1}
                               </span>
+                              <h4 className="text-base font-semibold text-foreground">{target.title}</h4>
                             </div>
-                            <p className="text-sm text-muted-foreground leading-relaxed">
+                            <p className="text-sm text-muted-foreground leading-relaxed min-h-[72px] flex items-center justify-center">
                               {placedOptions[target.id] ?? target.description}
                             </p>
+                            <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#0f6a60]">
+                              拖到这里
+                            </span>
                           </div>
                         ))}
                       </div>
                     </div>
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex flex-col gap-4">
                       {feedback && (
                         <div
                           className={`rounded-3xl px-5 py-3 text-sm font-semibold ${
@@ -564,14 +543,9 @@ const ActivityLearn = () => {
                           {feedback}
                         </div>
                       )}
-                      <div className="flex items-center gap-4 sm:ml-auto">
-                        <span className="text-xs text-muted-foreground">
-                          完成匹配后，记录你的行动力想法。
-                        </span>
-                        <Button variant="outline" onClick={handleResetQuiz} className="rounded-full">
-                          重置
-                        </Button>
-                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        完成匹配后，记录你的行动力想法。
+                      </p>
                     </div>
                   </div>
                 </div>
