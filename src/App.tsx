@@ -8,6 +8,7 @@ import Activities from "./pages/Activities";
 import ActivityDetail from "./pages/ActivityDetail";
 import ActivityLearn from "./pages/ActivityLearn";
 import NotFound from "./pages/NotFound";
+import Editor from "./pages/Editor";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/activities" element={<Activities />} />
           <Route path="/activities/:id" element={<ActivityDetail />} />
           <Route path="/activities/:id/learn" element={<ActivityLearn />} />
+          <Route path="/editor/:lessonId" element={<Editor />} />
           <Route path="/leaderboard" element={<Index />} />
           <Route path="/progress" element={<Index />} />
           <Route path="/events" element={<Index />} />

@@ -14,8 +14,11 @@ import {
   Circle,
   Sparkles,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import type { BlockNode, Section } from "@/content/types";
+import { BlockRenderer } from "@/renderers/BlockRenderer";
+import { validateLessonDocument } from "@/content/schema";
 
 const ActivityLearn = () => {
   const navigate = useNavigate();
@@ -100,6 +103,61 @@ const ActivityLearn = () => {
 
   const [activeDrag, setActiveDrag] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [sections, setSections] = useState<Section[] | null>(null);
+
+  useEffect(() => {
+    fetch("/content/lesson-001.json")
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((json: unknown) => {
+        const validation = validateLessonDocument(json);
+        if (!validation.success) {
+          console.group("[ActivityLearn] Lesson JSON validation issues");
+          validation.issues.forEach((i) => console.warn(`${i.level.toUpperCase()}: ${i.message}`, i.path));
+          console.groupEnd();
+        }
+        type MaybeLesson = { id?: string; sections?: unknown }
+        const maybe = json as MaybeLesson
+        const okSections = validation.data?.sections ?? (Array.isArray(maybe.sections) ? (maybe.sections as Section[]) : null);
+        if (okSections) {
+          console.info("[ActivityLearn] JSON lesson loaded", {
+            lessonId: validation.data?.id ?? maybe.id,
+            sections: okSections.length,
+          });
+          setSections(okSections);
+        } else {
+          console.warn("[ActivityLearn] Lesson JSON missing sections", json);
+          setSections(null);
+        }
+      })
+      .catch((error) => {
+        console.error("[ActivityLearn] Failed to load lesson JSON", error);
+        setSections(null);
+      });
+  }, []);
+
+  const findBlock = (id: string): BlockNode | undefined => {
+    if (!sections) return undefined;
+    for (const s of sections) {
+      const n = s.blocks.find((b) => b.id === id);
+      if (n) return n as BlockNode;
+    }
+    return undefined;
+  };
+
+  const heroBlock = findBlock("b-hero");
+  const audioBlock = findBlock("b-audio");
+  const imageBlockOne = findBlock("b-image-1");
+  const imageBlockTwo = findBlock("b-image-2");
+  const videoBlock = findBlock("b-video");
+  const outcomesBlock = findBlock("b-outcomes");
+  const brandCardBlock = findBlock("b-brand");
+  const flipCardsBlock = findBlock("b-flip");
+  const dragMatchBlock = findBlock("b-drag");
+  const tipsBlock = findBlock("b-tips");
+  const ctaBlock = findBlock("b-cta");
 
   const handleDragStart = (id: string) => {
     setActiveDrag(id);
@@ -207,78 +265,84 @@ const ActivityLearn = () => {
 
           {/* Main Content Area - Scrollable */}
           <main className="flex-1 h-full overflow-y-auto bg-muted flex flex-col">
-            {/* Hero section */}
-            <div className="relative overflow-hidden flex-shrink-0">
-              <div className="absolute inset-0">
-                <img
-                  src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=2000&q=80"
-                  alt="Hero background"
-                  className="h-full w-full object-cover"
-                />
-                <div className="absolute inset-0 bg-[#0a514f]/80" />
-              </div>
-              <div className="relative px-10 pt-14 pb-24 text-white">
-                <div className="flex items-center justify-between gap-6">
-                  <div className="flex flex-col gap-4">
-                    <span className="text-sm font-semibold tracking-[0.3em] uppercase text-white/70">
-                      第 1 课，共 4 课
-                    </span>
-                    <h1 className="text-4xl lg:text-5xl font-bold tracking-tight">准备开始</h1>
-                    <p className="text-base max-w-xl text-white/70">
-                      播放音频，投入创业思维。
-                    </p>
-                  </div>
-                  <div className="hidden lg:flex items-center gap-3 text-sm font-medium text-white/80">
-                    <ArrowUp className="w-4 h-4" />
-                    <span>返回模块</span>
+            {/* Hero section (JSON-driven if available) */}
+            {heroBlock ? (
+              <BlockRenderer block={heroBlock} />
+            ) : (
+              <div className="relative overflow-hidden flex-shrink-0">
+                <div className="absolute inset-0">
+                  <img
+                    src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=2000&q=80"
+                    alt="Hero background"
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-[#0a514f]/80" />
+                </div>
+                <div className="relative px-10 pt-14 pb-24 text-white">
+                  <div className="flex items-center justify-between gap-6">
+                    <div className="flex flex-col gap-4">
+                      <span className="text-sm font-semibold tracking-[0.3em] uppercase text-white/70">
+                        第 1 课，共 4 课
+                      </span>
+                      <h1 className="text-4xl lg:text-5xl font-bold tracking-tight">准备开始</h1>
+                      <p className="text-base max-w-xl text-white/70">播放音频，投入创业思维。</p>
+                    </div>
+                    <div className="hidden lg:flex items-center gap-3 text-sm font-medium text-white/80">
+                      <ArrowUp className="w-4 h-4" />
+                      <span>返回模块</span>
+                    </div>
                   </div>
                 </div>
+                <div className="h-16 bg-white" style={{ clipPath: "polygon(0 35%, 100% 0, 100% 100%, 0% 100%)" }} />
               </div>
-              <div
-                className="h-16 bg-white"
-                style={{ clipPath: "polygon(0 35%, 100% 0, 100% 100%, 0% 100%)" }}
-              />
-            </div>
+            )}
 
             {/* Scrollable content */}
             <section className="px-10 py-12">
               <div className="max-w-5xl mx-auto">
-                <div className="bg-white rounded-[32px] shadow-xl border border-muted-foreground/10 px-8 py-7 space-y-5">
-                  <div className="flex flex-wrap items-center justify-between gap-5">
-                    <div className="space-y-2">
-                      <span className="text-xs font-semibold uppercase tracking-[0.3em] text-clover-green">
-                        音频课程
-                      </span>
-                      <h2 className="text-2xl font-semibold text-foreground">准备开始 · 沉浸式引导</h2>
+                {audioBlock ? (
+                  <BlockRenderer block={audioBlock} />
+                ) : (
+                  <div className="bg-white rounded-[32px] shadow-xl border border-muted-foreground/10 px-8 py-7 space-y-5">
+                    <div className="flex flex-wrap items-center justify-between gap-5">
+                      <div className="space-y-2">
+                        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-clover-green">
+                          音频课程
+                        </span>
+                        <h2 className="text-2xl font-semibold text-foreground">准备开始 · 沉浸式引导</h2>
+                      </div>
+                      <p className="text-sm text-muted-foreground max-w-sm">
+                        播放导师的引导语，代入创业者角色。
+                      </p>
                     </div>
-                    <p className="text-sm text-muted-foreground max-w-sm">
-                      播放导师的引导语，代入创业者角色。
-                    </p>
-                  </div>
-                  <div className="rounded-[24px] bg-[#f5f9f7] border border-[#d7ebe0] px-5 py-4 flex flex-wrap items-center gap-4">
-                    <Button
-                      size="icon"
-                      className="h-12 w-12 rounded-full bg-[#0f6a60] text-white hover:bg-[#0c564d]"
-                    >
-                      <Play className="w-5 h-5 ml-0.5" />
-                    </Button>
-                    <div className="flex items-center gap-4 flex-1 min-w-[200px]">
-                      <Volume2 className="w-5 h-5 text-[#0f6a60]" />
-                      <div className="flex-1 h-1 rounded-full bg-white shadow-inner">
-                        <div className="h-full w-[46%] rounded-full bg-[#0f6a60]" />
+                    <div className="rounded-[24px] bg-[#f5f9f7] border border-[#d7ebe0] px-5 py-4 flex flex-wrap items-center gap-4">
+                      <Button
+                        size="icon"
+                        className="h-12 w-12 rounded-full bg-[#0f6a60] text-white hover:bg-[#0c564d]"
+                      >
+                        <Play className="w-5 h-5 ml-0.5" />
+                      </Button>
+                      <div className="flex items-center gap-4 flex-1 min-w-[200px]">
+                        <Volume2 className="w-5 h-5 text-[#0f6a60]" />
+                        <div className="flex-1 h-1 rounded-full bg-white shadow-inner">
+                          <div className="h-full w-[46%] rounded-full bg-[#0f6a60]" />
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 text-sm text-muted-foreground font-medium">
+                        <span>0:47</span>
+                        <span>1x</span>
+                        <List className="w-5 h-5 text-[#5c6f66]" />
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 text-sm text-muted-foreground font-medium">
-                      <span>0:47</span>
-                      <span>1x</span>
-                      <List className="w-5 h-5 text-[#5c6f66]" />
-                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </section>
 
-              <section className="px-10 pb-12">
+            <section className="px-10 pb-12">
+              {imageBlockOne ? (
+                <BlockRenderer block={imageBlockOne} />
+              ) : (
                 <div className="max-w-5xl mx-auto grid lg:grid-cols-[minmax(280px,320px)_1fr] gap-10 items-center">
                   <figure className="space-y-6">
                     <div className="rounded-[30px] overflow-hidden shadow-xl">
@@ -303,179 +367,205 @@ const ActivityLearn = () => {
                     </p>
                   </div>
                 </div>
-              </section>
+              )}
+            </section>
 
-              <section className="px-10 pb-14">
-                <div className="max-w-6xl mx-auto bg-white rounded-[40px] shadow-xl overflow-hidden border border-muted-foreground/10">
-                  <div className="px-10 pt-12 pb-6 space-y-5">
-                    <div className="inline-flex items-center gap-2 text-sm font-semibold text-clover-green uppercase tracking-[0.2em]">
-                      <Sparkles className="w-4 h-4" />
-                      视频课堂
-                    </div>
-                    <div className="flex flex-col gap-3 max-w-3xl">
-                      <h2 className="text-3xl leading-tight font-bold text-foreground">
-                        灵感工作坊：观察 → 创造
-                      </h2>
-                      <p className="text-base text-muted-foreground leading-relaxed">
-                        观看短片，了解两位同龄人如何从校园生活的烦恼中，找到值得尝试的创意。
-                        记录下你听到的关键故事片段与灵感闪光点。
-                      </p>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-3 text-sm">
-                      <span className="inline-flex items-center gap-2 rounded-full bg-clover-green/12 text-clover-green px-4 py-2 font-medium">
-                        真实案例
-                      </span>
-                      <span className="text-muted-foreground">时长 2 分钟 · 伴随字幕</span>
-                    </div>
-                  </div>
-                  <div className="px-6 pb-12">
-                    <AspectRatio ratio={16 / 9} className="rounded-[32px] overflow-hidden bg-[#0f3f3d]">
-                      <video
-                        controls
-                        poster="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=1600&q=80"
-                        className="h-full w-full object-cover"
-                      >
-                        <source
-                          src="https://cdn.coverr.co/videos/coverr-young-innovators-discussing-ideas-4087/1080p.mp4"
-                          type="video/mp4"
-                        />
-                        你的浏览器暂不支持视频播放。
-                      </video>
-                    </AspectRatio>
-                  </div>
-                </div>
-              </section>
-
-              <section className="px-10 pb-12">
-                <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-lg p-10 grid lg:grid-cols-[1fr_minmax(280px,320px)] gap-12 items-center">
-                  <div>
-                    <h2 className="text-2xl font-semibold text-foreground mb-6">
-                      完成本活动后，你将能够：
-                    </h2>
-                    <ul className="space-y-4 text-base text-muted-foreground">
-                      <li className="flex items-start gap-3">
-                        <span className="mt-1 inline-block h-2 w-2 rounded-full bg-clover-green" />
-                        <span>识别自己的才能、兴趣与爱好。</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <span className="mt-1 inline-block h-2 w-2 rounded-full bg-clover-green" />
-                        <span>明确自己已经具备哪些创业技能以启动创意。</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <span className="mt-1 inline-block h-2 w-2 rounded-full bg-clover-green" />
-                        <span>打造一段激发好奇心的电梯演讲。</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <figure className="space-y-6">
-                    <div className="rounded-3xl overflow-hidden shadow-lg">
-                      <div className="aspect-square">
-                        <img
-                          src="https://images.unsplash.com/photo-1552581234-26160f608093?auto=format&fit=crop&w=900&q=80"
-                          alt="Students collaborating"
-                          className="h-full w-full object-cover"
-                        />
+            <section className="px-10 pb-14">
+              <div className="max-w-6xl mx-auto">
+                {videoBlock ? (
+                  <BlockRenderer block={videoBlock} />
+                ) : (
+                  <div className="bg-white rounded-[40px] shadow-xl overflow-hidden border border-muted-foreground/10">
+                    <div className="px-10 pt-12 pb-6 space-y-5">
+                      <div className="inline-flex items-center gap-2 text-sm font-semibold text-clover-green uppercase tracking-[0.2em]">
+                        <Sparkles className="w-4 h-4" />
+                        视频课堂
+                      </div>
+                      <div className="flex flex-col gap-3 max-w-3xl">
+                        <h2 className="text-3xl leading-tight font-bold text-foreground">
+                          灵感工作坊：观察 → 创造
+                        </h2>
+                        <p className="text-base text-muted-foreground leading-relaxed">
+                          观看短片，了解两位同龄人如何从校园生活的烦恼中，找到值得尝试的创意。
+                          记录下你听到的关键故事片段与灵感闪光点。
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-3 text-sm">
+                        <span className="inline-flex items-center gap-2 rounded-full bg-clover-green/12 text-clover-green px-4 py-2 font-medium">
+                          真实案例
+                        </span>
+                        <span className="text-muted-foreground">时长 2 分钟 · 伴随字幕</span>
                       </div>
                     </div>
-                    <figcaption className="text-base leading-relaxed text-muted-foreground border-l-2 border-clover-green/70 pl-5">
-                      与团队共创时，随手记录能够推动创意的亮点。
-                    </figcaption>
-                  </figure>
-                </div>
-              </section>
+                    <div className="px-6 pb-12">
+                      <AspectRatio ratio={16 / 9} className="rounded-[32px] overflow-hidden bg-[#0f3f3d]">
+                        <video
+                          controls
+                          poster="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=1600&q=80"
+                          className="h-full w-full object-cover"
+                        >
+                          <source
+                            src="https://cdn.coverr.co/videos/coverr-young-innovators-discussing-ideas-4087/1080p.mp4"
+                            type="video/mp4"
+                          />
+                          你的浏览器暂不支持视频播放。
+                        </video>
+                      </AspectRatio>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </section>
+
+            <section className="px-10 pb-12">
+              <div className="max-w-5xl mx-auto">
+                {outcomesBlock ? (
+                  <BlockRenderer block={outcomesBlock} />
+                ) : (
+                  <div className="bg-white rounded-3xl shadow-lg p-10 grid lg:grid-cols-[1fr_minmax(280px,320px)] gap-12 items-center">
+                    <div>
+                      <h2 className="text-2xl font-semibold text-foreground mb-6">
+                        完成本活动后，你将能够：
+                      </h2>
+                      <ul className="space-y-4 text-base text-muted-foreground">
+                        <li className="flex items-start gap-3">
+                          <span className="mt-1 inline-block h-2 w-2 rounded-full bg-clover-green" />
+                          <span>识别自己的才能、兴趣与爱好。</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                          <span className="mt-1 inline-block h-2 w-2 rounded-full bg-clover-green" />
+                          <span>明确自己已经具备哪些创业技能以启动创意。</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                          <span className="mt-1 inline-block h-2 w-2 rounded-full bg-clover-green" />
+                          <span>打造一段激发好奇心的电梯演讲。</span>
+                        </li>
+                      </ul>
+                    </div>
+                    <figure className="space-y-6">
+                      <div className="rounded-3xl overflow-hidden shadow-lg">
+                        <div className="aspect-square">
+                          <img
+                            src="https://images.unsplash.com/photo-1552581234-26160f608093?auto=format&fit=crop&w=900&q=80"
+                            alt="Students collaborating"
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                      </div>
+                      <figcaption className="text-base leading-relaxed text-muted-foreground border-l-2 border-clover-green/70 pl-5">
+                        与团队共创时，随手记录能够推动创意的亮点。
+                      </figcaption>
+                    </figure>
+                  </div>
+                )}
+              </div>
+            </section>
 
               <section className="px-10 pb-12">
-                <div className="max-w-6xl mx-auto bg-gradient-to-br from-[#0c5d52] via-[#0a514f] to-[#083d3b] rounded-[40px] text-white overflow-hidden shadow-2xl">
-                  <div className="px-10 py-16 text-center">
-                    <p className="text-sm uppercase tracking-[0.4em] text-white/70 mb-6">
-                      准备材料
-                    </p>
-                    <h2 className="text-4xl lg:text-5xl font-bold mb-6">成为企业家需要具备什么？</h2>
-                    <p className="text-base max-w-3xl mx-auto text-white/80">
-                      一旦确认值得解决的问题，就该收集灵感与资源，让你的创意成真。
-                    </p>
+                {brandCardBlock ? (
+                  <BlockRenderer block={brandCardBlock} />
+                ) : (
+                  <div className="max-w-6xl mx-auto bg-gradient-to-br from-[#0c5d52] via-[#0a514f] to-[#083d3b] rounded-[40px] text-white overflow-hidden shadow-2xl">
+                    <div className="px-10 py-16 text-center">
+                      <p className="text-sm uppercase tracking-[0.4em] text-white/70 mb-6">准备材料</p>
+                      <h2 className="text-4xl lg:text-5xl font-bold mb-6">成为企业家需要具备什么？</h2>
+                      <p className="text-base max-w-3xl mx-auto text-white/80">
+                        一旦确认值得解决的问题，就该收集灵感与资源，让你的创意成真。
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
               </section>
 
               <section className="px-10 pb-16">
-                <div className="max-w-5xl mx-auto grid lg:grid-cols-[minmax(280px,320px)_1fr] gap-12 items-center">
-                  <figure className="space-y-6">
-                    <div className="rounded-[32px] overflow-hidden shadow-xl">
-                      <div className="aspect-square">
-                        <img
-                          src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=900&q=80"
-                          alt="Young woman presenting"
-                          className="h-full w-full object-cover"
-                        />
+                {imageBlockTwo ? (
+                  <BlockRenderer block={imageBlockTwo} />
+                ) : (
+                  <div className="max-w-5xl mx-auto grid lg:grid-cols-[minmax(280px,320px)_1fr] gap-12 items-center">
+                    <figure className="space-y-6">
+                      <div className="rounded-[32px] overflow-hidden shadow-xl">
+                        <div className="aspect-square">
+                          <img
+                            src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=900&q=80"
+                            alt="Young woman presenting"
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
                       </div>
+                      <figcaption className="text-base leading-relaxed text-muted-foreground border-l-2 border-clover-green/70 pl-5">
+                        让视觉素材保持呼吸感，更好地聚焦关键信息。
+                      </figcaption>
+                    </figure>
+                    <div className="space-y-5 text-base leading-relaxed text-muted-foreground lg:self-center">
+                      <p>
+                        当你拥有一个商业创意时，需要用令人难忘的方式向潜在客户和支持者介绍它。
+                      </p>
+                      <p>
+                        你的电梯演讲应突出要解决的问题、灵感来源以及能够创造的价值。
+                      </p>
+                      <p className="font-semibold text-foreground">
+                        保持内容简洁、自然并充满自信。
+                      </p>
                     </div>
-                    <figcaption className="text-base leading-relaxed text-muted-foreground border-l-2 border-clover-green/70 pl-5">
-                      让视觉素材保持呼吸感，更好地聚焦关键信息。
-                    </figcaption>
-                  </figure>
-                  <div className="space-y-5 text-base leading-relaxed text-muted-foreground lg:self-center">
-                    <p>
-                      当你拥有一个商业创意时，需要用令人难忘的方式向潜在客户和支持者介绍它。
-                    </p>
-                    <p>
-                      你的电梯演讲应突出要解决的问题、灵感来源以及能够创造的价值。
-                    </p>
-                    <p className="font-semibold text-foreground">
-                      保持内容简洁、自然并充满自信。
-                    </p>
                   </div>
-                </div>
+                )}
               </section>
 
               <section className="px-10 pb-16">
                 <div className="max-w-6xl mx-auto space-y-8">
-                  <div className="bg-white rounded-[36px] shadow-xl p-10">
-                    <div className="space-y-2 mb-10">
-                      <span className="text-xs font-semibold uppercase tracking-[0.3em] text-clover-green">
-                        互动卡片
-                      </span>
-                      <h3 className="text-2xl font-semibold text-foreground">
-                        翻转卡片掌握核心问题
-                      </h3>
-                      <p className="text-sm text-muted-foreground max-w-xl">
-                        每张卡片都是创业故事中的关键节点。先思考，再翻转，看看实战经验给出的提示。
-                      </p>
-                    </div>
-                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                      {flipCards.map((card, index) => {
-                        const flipped = Boolean(flippedState[index]);
-                        return (
-                          <button
-                            key={card.prompt}
-                            onClick={() => toggleFlip(index)}
-                            className="group h-60 [perspective:1200px]"
-                          >
-                            <div
-                              className={`relative h-full w-full rounded-[28px] border border-muted-foreground/12 bg-gradient-to-br from-white to-white shadow-lg transition-transform duration-500 [transform-style:preserve-3d] ${
-                                flipped ? "[transform:rotateY(180deg)]" : ""
-                              }`}
+                  {flipCardsBlock ? (
+                    <BlockRenderer block={flipCardsBlock} />
+                  ) : (
+                    <div className="bg-white rounded-[36px] shadow-xl p-10">
+                      <div className="space-y-2 mb-10">
+                        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-clover-green">
+                          互动卡片
+                        </span>
+                        <h3 className="text-2xl font-semibold text-foreground">
+                          翻转卡片掌握核心问题
+                        </h3>
+                        <p className="text-sm text-muted-foreground max-w-xl">
+                          每张卡片都是创业故事中的关键节点。先思考，再翻转，看看实战经验给出的提示。
+                        </p>
+                      </div>
+                      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        {flipCards.map((card, index) => {
+                          const flipped = Boolean(flippedState[index]);
+                          return (
+                            <button
+                              key={card.prompt}
+                              onClick={() => toggleFlip(index)}
+                              className="group h-60 [perspective:1200px]"
                             >
-                              <div className="absolute inset-0 flex flex-col justify-between p-6 [backface-visibility:hidden]">
-                                <span className="text-sm font-semibold text-clover-green">点击翻转</span>
-                                <p className="text-lg font-semibold text-foreground leading-snug">{card.prompt}</p>
-                                <span className="text-sm text-muted-foreground">思考 30 秒后再翻转查看提示</span>
+                              <div
+                                className={`relative h-full w-full rounded-[28px] border border-muted-foreground/12 bg-gradient-to-br from-white to-white shadow-lg transition-transform duration-500 [transform-style:preserve-3d] ${
+                                  flipped ? "[transform:rotateY(180deg)]" : ""
+                                }`}
+                              >
+                                <div className="absolute inset-0 flex flex-col justify-between p-6 [backface-visibility:hidden]">
+                                  <span className="text-sm font-semibold text-clover-green">点击翻转</span>
+                                  <p className="text-lg font-semibold text-foreground leading-snug">{card.prompt}</p>
+                                  <span className="text-sm text-muted-foreground">思考 30 秒后再翻转查看提示</span>
+                                </div>
+                                <div className="absolute inset-0 flex flex-col justify-between rounded-[28px] bg-[#0a514f] p-6 text-white shadow-lg [transform:rotateY(180deg)] [backface-visibility:hidden]">
+                                  <span className="text-sm font-semibold uppercase tracking-[0.2em] text-white/70">
+                                    灵感提示
+                                  </span>
+                                  <p className="text-lg leading-relaxed">{card.insight}</p>
+                                  <span className="text-xs text-white/60">再次点击可回到问题面</span>
+                                </div>
                               </div>
-                              <div className="absolute inset-0 flex flex-col justify-between rounded-[28px] bg-[#0a514f] p-6 text-white shadow-lg [transform:rotateY(180deg)] [backface-visibility:hidden]">
-                                <span className="text-sm font-semibold uppercase tracking-[0.2em] text-white/70">
-                                  灵感提示
-                                </span>
-                                <p className="text-lg leading-relaxed">{card.insight}</p>
-                                <span className="text-xs text-white/60">再次点击可回到问题面</span>
-                              </div>
-                            </div>
-                          </button>
-                        );
-                      })}
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
+                  )}
 
-                  <div className="bg-white rounded-[36px] shadow-xl p-10 space-y-8">
+                  {dragMatchBlock ? (
+                    <BlockRenderer block={dragMatchBlock} />
+                  ) : (
+                    <div className="bg-white rounded-[36px] shadow-xl p-10 space-y-8">
                     <div className="space-y-3">
                       <span className="text-xs font-semibold uppercase tracking-[0.3em] text-clover-green">
                         拖拽练习
@@ -548,65 +638,76 @@ const ActivityLearn = () => {
                       </p>
                     </div>
                   </div>
+                  )}
                 </div>
               </section>
 
-              <section className="px-10 pb-16">
-                <div className="max-w-5xl mx-auto bg-white rounded-[36px] shadow-xl p-10 space-y-8">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div>
-                      <span className="text-xs font-semibold uppercase tracking-[0.3em] text-clover-green">
-                        深入思考
-                      </span>
-                      <h3 className="mt-2 text-2xl font-semibold text-foreground">展开小贴士，继续自我挑战</h3>
+            <section className="px-10 pb-16">
+                <div className="max-w-5xl mx-auto">
+                  {tipsBlock ? (
+                    <BlockRenderer block={tipsBlock} />
+                  ) : (
+                    <div className="bg-white rounded-[36px] shadow-xl p-10 space-y-8">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div>
+                          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-clover-green">
+                            深入思考
+                          </span>
+                          <h3 className="mt-2 text-2xl font-semibold text-foreground">展开小贴士，继续自我挑战</h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground max-w-sm">
+                          根据你的节奏逐条阅读，每完成一条就写下一个具体行动。
+                        </p>
+                      </div>
+                      <Accordion type="multiple" className="space-y-4">
+                        <AccordionItem value="tip-1" className="border border-muted-foreground/10 rounded-2xl px-4">
+                          <AccordionTrigger className="text-base font-semibold text-foreground">
+                            将你的故事浓缩成 30 秒演讲
+                          </AccordionTrigger>
+                          <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
+                            先用一句话说明你解决的问题，再用一句话强调你带来的独特价值，最后邀请听众采取行动。
+                          </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="tip-2" className="border border-muted-foreground/10 rounded-2xl px-4">
+                          <AccordionTrigger className="text-base font-semibold text-foreground">
+                            设计一张“下一步行动”便利贴
+                          </AccordionTrigger>
+                          <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
+                            写下你需要联系的人、准备的材料或要进行的测试，贴在显眼位置提醒自己持续推进。
+                          </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="tip-3" className="border border-muted-foreground/10 rounded-2xl px-4">
+                          <AccordionTrigger className="text-base font-semibold text-foreground">
+                            邀请同伴给予即时反馈
+                          </AccordionTrigger>
+                          <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
+                            分享你今天最大的收获，请对方提出一个问题或建议，并与你一起寻找可能的优化方向。
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
                     </div>
-                    <p className="text-sm text-muted-foreground max-w-sm">
-                      根据你的节奏逐条阅读，每完成一条就写下一个具体行动。
-                    </p>
-                  </div>
-                  <Accordion type="multiple" className="space-y-4">
-                    <AccordionItem value="tip-1" className="border border-muted-foreground/10 rounded-2xl px-4">
-                      <AccordionTrigger className="text-base font-semibold text-foreground">
-                        将你的故事浓缩成 30 秒演讲
-                      </AccordionTrigger>
-                      <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
-                        先用一句话说明你解决的问题，再用一句话强调你带来的独特价值，最后邀请听众采取行动。
-                      </AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem value="tip-2" className="border border-muted-foreground/10 rounded-2xl px-4">
-                      <AccordionTrigger className="text-base font-semibold text-foreground">
-                        设计一张“下一步行动”便利贴
-                      </AccordionTrigger>
-                      <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
-                        写下你需要联系的人、准备的材料或要进行的测试，贴在显眼位置提醒自己持续推进。
-                      </AccordionContent>
-                    </AccordionItem>
-                    <AccordionItem value="tip-3" className="border border-muted-foreground/10 rounded-2xl px-4">
-                      <AccordionTrigger className="text-base font-semibold text-foreground">
-                        邀请同伴给予即时反馈
-                      </AccordionTrigger>
-                      <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
-                        分享你今天最大的收获，请对方提出一个问题或建议，并与你一起寻找可能的优化方向。
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
+                  )}
                 </div>
               </section>
 
               <section className="px-10 pb-20">
-                <div className="max-w-4xl mx-auto bg-white rounded-[36px] shadow-xl p-12 text-center space-y-6">
-                  <h3 className="text-3xl lg:text-4xl font-bold text-foreground">更进一步</h3>
-                  <p className="text-lg text-muted-foreground">
-                    通过额外挑战、自我反思提示以及与你一样的青年创新者案例，继续你的创业之旅。
-                  </p>
-                  <Button
-                    size="lg"
-                    className="px-10 py-6 text-base font-semibold rounded-full"
-                    onClick={() => navigate(`/activities/${id}`)}
-                  >
-                    完成活动
-                  </Button>
-                </div>
+                {ctaBlock ? (
+                  <BlockRenderer block={ctaBlock} />
+                ) : (
+                  <div className="max-w-4xl mx-auto bg-white rounded-[36px] shadow-xl p-12 text-center space-y-6">
+                    <h3 className="text-3xl lg:text-4xl font-bold text-foreground">更进一步</h3>
+                    <p className="text-lg text-muted-foreground">
+                      通过额外挑战、自我反思提示以及与你一样的青年创新者案例，继续你的创业之旅。
+                    </p>
+                    <Button
+                      size="lg"
+                      className="px-10 py-6 text-base font-semibold rounded-full"
+                      onClick={() => navigate(`/activities/${id}`)}
+                    >
+                      完成活动
+                    </Button>
+                  </div>
+                )}
               </section>
           </main>
         </div>
