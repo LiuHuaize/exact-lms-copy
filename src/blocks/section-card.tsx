@@ -14,6 +14,7 @@ export const SectionCardSchema = z.object({
   eyebrow: z.string().optional(),
   title: z.string(),
   description: z.string().optional(),
+  items: z.array(z.string()).optional().default([]),
   align: z.enum(['center', 'left']).default('center'),
   ctas: z
     .array(
@@ -43,6 +44,20 @@ const SectionCardRender: React.FC<{ data: SectionCardData }> = ({ data }) => {
           <h2 className={`text-4xl lg:text-5xl font-bold mb-6 ${isCenter ? '' : ''}`}>{data.title}</h2>
           {data.description && (
             <p className={`text-base max-w-3xl ${isCenter ? 'mx-auto' : ''} text-white/80`}>{data.description}</p>
+          )}
+          {data.items && data.items.length > 0 && (
+            <ul
+              className={`mt-8 space-y-3 text-base text-white/85 ${
+                isCenter ? 'mx-auto max-w-2xl text-left' : ''
+              }`}
+            >
+              {data.items.map((item, idx) => (
+                <li key={idx} className="flex items-start gap-3">
+                  <span className="mt-2 inline-block h-2 w-2 rounded-full bg-white/70" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
           )}
         </div>
       </div>
@@ -74,9 +89,34 @@ const SectionCardRender: React.FC<{ data: SectionCardData }> = ({ data }) => {
 
   // plain
   return (
-    <div className={`max-w-5xl mx-auto bg-white rounded-[32px] shadow p-10 ${isCenter ? 'text-center' : ''}`}>
-      <h3 className="text-2xl font-semibold text-foreground">{data.title}</h3>
-      {data.description && <p className="mt-2 text-muted-foreground">{data.description}</p>}
+    <div className={`max-w-5xl mx-auto bg-white rounded-[32px] shadow p-10 space-y-6 ${isCenter ? 'text-center' : ''}`}>
+      {data.eyebrow && (
+        <p
+          className={`text-sm font-semibold uppercase tracking-[0.3em] text-clover-green ${
+            isCenter ? 'mx-auto' : ''
+          }`}
+        >
+          {data.eyebrow}
+        </p>
+      )}
+      <div className="space-y-2">
+        <h3 className="text-2xl font-semibold text-foreground">{data.title}</h3>
+        {data.description && <p className="text-muted-foreground">{data.description}</p>}
+      </div>
+      {data.items && data.items.length > 0 && (
+        <ul
+          className={`space-y-3 text-base text-muted-foreground ${
+            isCenter ? 'mx-auto max-w-2xl text-left' : ''
+          }`}
+        >
+          {data.items.map((item, idx) => (
+            <li key={idx} className="flex items-start gap-3">
+              <span className="mt-2 inline-block h-2 w-2 rounded-full bg-clover-green" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }
@@ -90,6 +130,7 @@ export const SectionCardPlugin: BlockPlugin<SectionCardData> = {
     variant: 'plain',
     title: '标题',
     description: '',
+    items: [],
     align: 'center',
     ctas: [],
   },
@@ -102,6 +143,7 @@ export const SectionCardPlugin: BlockPlugin<SectionCardData> = {
     })
 
     const { fields, append, remove } = useFieldArray({ control: form.control, name: 'ctas' })
+    const items = useFieldArray({ control: form.control, name: 'items' })
 
     // Live-sync to parent on any valid change
     useEffect(() => {
@@ -137,6 +179,30 @@ export const SectionCardPlugin: BlockPlugin<SectionCardData> = {
         <div className="space-y-2">
           <Label htmlFor="description">描述</Label>
           <Textarea id="description" rows={3} placeholder="补充说明，可选" {...form.register('description')} />
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Label>要点列表</Label>
+            <Button type="button" size="sm" variant="outline" onClick={() => items.append('')}>
+              添加要点
+            </Button>
+          </div>
+          <div className="space-y-2">
+            {items.fields.map((field, idx) => (
+              <div key={field.id} className="flex items-end gap-2">
+                <Textarea
+                  rows={2}
+                  className="flex-1"
+                  placeholder={`要点 ${idx + 1}`}
+                  {...form.register(`items.${idx}` as const)}
+                />
+                <Button type="button" variant="ghost" onClick={() => items.remove(idx)}>
+                  删除
+                </Button>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="space-y-2">

@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 
 export const ImageWithTextSchema = z.object({
   layout: z.enum(['image-left', 'image-right']).default('image-left'),
+  contentAlign: z.enum(['left', 'center']).default('left'),
   image: z.object({
     url: z.string().url(),
     alt: z.string().optional(),
@@ -22,16 +23,17 @@ export type ImageWithTextData = z.infer<typeof ImageWithTextSchema>
 
 const ImageWithTextRender: React.FC<{ data: ImageWithTextData }> = ({ data }) => {
   const isImageLeft = data.layout === 'image-left'
+  const isCenterAligned = data.contentAlign === 'center'
 
   const renderImage = (extraClass?: string) => (
-    <figure className={`space-y-6 ${extraClass ?? ''}`}>
-      <div className="rounded-[32px] overflow-hidden shadow-xl">
-        <div className="aspect-square">
+    <figure className={`space-y-4 ${extraClass ?? ''}`}>
+      <div className="rounded-[28px] overflow-hidden shadow-lg border border-muted-foreground/10 bg-muted/30">
+        <div className="aspect-[4/3] max-h-[280px]">
           <img src={data.image.url} alt={data.image.alt ?? ''} className="h-full w-full object-cover" />
         </div>
       </div>
       {data.caption && (
-        <figcaption className="text-base leading-relaxed text-muted-foreground border-l-2 border-clover-green pl-5">
+        <figcaption className={`text-sm leading-relaxed text-muted-foreground border-l-2 border-clover-green/70 pl-4 ${isCenterAligned ? 'mx-auto max-w-xs text-left border-l-0 border-t-2 pt-3' : ''}`}>
           {data.caption}
         </figcaption>
       )}
@@ -39,7 +41,11 @@ const ImageWithTextRender: React.FC<{ data: ImageWithTextData }> = ({ data }) =>
   )
 
   const textSection = (
-    <div className="space-y-5 text-base lg:text-lg leading-relaxed text-muted-foreground lg:self-center">
+    <div
+      className={`w-full flex flex-col gap-4 justify-center text-base leading-relaxed text-muted-foreground ${
+        isCenterAligned ? 'text-center items-center max-w-2xl mx-auto' : ''
+      }`}
+    >
       {data.body.map((paragraph, idx) => (
         <p key={idx}>{paragraph}</p>
       ))}
@@ -47,18 +53,26 @@ const ImageWithTextRender: React.FC<{ data: ImageWithTextData }> = ({ data }) =>
   )
 
   return (
-    <div className="max-w-5xl mx-auto grid lg:grid-cols-[minmax(280px,320px)_1fr] gap-10 items-center">
-      {isImageLeft ? (
-        <>
-          {renderImage()}
-          {textSection}
-        </>
-      ) : (
-        <>
-          {textSection}
-          {renderImage('lg:order-last')}
-        </>
-      )}
+    <div className="max-w-5xl mx-auto">
+      <div
+        className="bg-white rounded-[36px] shadow-2xl border border-muted-foreground/10 px-8 py-10 flex flex-col gap-10 lg:flex-row lg:items-center"
+      >
+        {isImageLeft ? (
+          <>
+            {renderImage('lg:max-w-xs w-full mx-auto')}
+            <div className="flex-1 flex">
+              {textSection}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex-1 flex">
+              {textSection}
+            </div>
+            {renderImage('lg:max-w-xs w-full mx-auto lg:order-last')}
+          </>
+        )}
+      </div>
     </div>
   )
 }
@@ -70,6 +84,7 @@ export const ImageWithTextPlugin: BlockPlugin<ImageWithTextData> = {
   schema: ImageWithTextSchema,
   defaultData: {
     layout: 'image-left',
+    contentAlign: 'left',
     image: {
       url: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80',
       alt: '',
@@ -94,6 +109,14 @@ export const ImageWithTextPlugin: BlockPlugin<ImageWithTextData> = {
           <select id="layout" className="w-full border rounded-md px-3 py-2" {...form.register('layout')}>
             <option value="image-left">图左文右</option>
             <option value="image-right">文左图右</option>
+          </select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="contentAlign">正文对齐</Label>
+          <select id="contentAlign" className="w-full border rounded-md px-3 py-2" {...form.register('contentAlign')}>
+            <option value="left">居左</option>
+            <option value="center">居中</option>
           </select>
         </div>
 

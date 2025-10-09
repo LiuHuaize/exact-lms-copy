@@ -1,0 +1,205 @@
+{
+  "id": "lesson-002",
+  "title": "成为企业家需要具备什么？",
+  "sections": [
+    {
+      "id": "sec-hero",
+      "layout": "full",
+      "blocks": [
+        {
+          "id": "b-hero",
+          "type": "banner",
+          "data": {
+            "eyebrow": "第 2 课，共 4 课",
+            "title": "成为企业家需要具备什么？",
+            "subtitle": "梳理创业者的必备能力，并找到你的强项。",
+            "topRightLabel": "课程目录",
+            "bgImage": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=2000&q=80"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-audio",
+      "layout": "single",
+      "blocks": [
+        {
+          "id": "b-audio-intro",
+          "type": "media-audio",
+          "data": {
+            "eyebrow": "音频导入",
+            "title": "今日目标 · 听一段引导语",
+            "description": "先播放导师的音频，了解今天要练习的思维模式与团队角色。",
+            "progressPercent": 0,
+            "durationLabel": "1:05",
+            "speedLabel": "1x",
+            "listLabel": "播放列表",
+            "primaryActionLabel": "播放音频"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-intro",
+      "layout": "single",
+      "blocks": [
+        {
+          "id": "b-goals",
+          "type": "section-card",
+          "data": {
+            "variant": "plain",
+            "eyebrow": "今日目标",
+            "title": "带着三个方向进入练习",
+            "description": "在音频中听听导师如何拆解这些目标，然后挑一个最想强化的能力。",
+            "items": [
+              "认识创业者共有的思维模式，并找到与你共鸣的部分。",
+              "探索自己在团队中更擅长扮演的角色与期待尝试的新分工。",
+              "设计一个帮助你练习的新微挑战，约同伴一起完成。"
+            ],
+            "align": "left"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-traits",
+      "layout": "two-col",
+      "blocks": [
+        {
+          "id": "b-traits",
+          "type": "image-with-list",
+          "data": {
+            "eyebrow": "核心能力",
+            "title": "创业者常见的 4 大特质",
+            "description": "阅读每一条时，请想想你曾在哪些场景展现过这些特质。",
+            "items": [
+              "观察力：在日常细节中捕捉未被满足的需求。",
+              "行动力：愿意尝试并快速迭代，不怕不完美的第一次。",
+              "共情力：从用户的角度理解问题，持续寻求反馈。",
+              "讲述力：把复杂的想法讲述成让人愿意加入的故事。"
+            ],
+            "image": {
+              "url": "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=900&q=80",
+              "alt": "Students brainstorming together"
+            },
+            "caption": "把想法写在便利贴上，可以帮助团队快速聚焦到真正重要的议题。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-video",
+      "layout": "full",
+      "blocks": [
+        {
+          "id": "b-video",
+          "type": "media-video",
+          "data": {
+            "eyebrow": "案例视频",
+            "title": "三位青年创业者的真实对话",
+            "description": [
+              "观看视频，聆听不同背景的同伴如何一步步靠近自己的创业想法。",
+              "留意他们如何分配角色、设定实验，并用数据证明创意的可行性。"
+            ],
+            "tags": ["团队协作", "真实案例"],
+            "meta": "时长 3 分钟 · 自带字幕",
+            "video": {
+              "src": "https://cdn.coverr.co/videos/coverr-a-team-in-a-creative-meeting-9443/1080p.mp4",
+              "poster": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-roles",
+      "layout": "two-col",
+      "blocks": [
+        {
+          "id": "b-roles",
+          "type": "image-with-text",
+          "data": {
+            "layout": "image-right",
+            "image": {
+              "url": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80",
+              "alt": "Team planning on whiteboard"
+            },
+            "caption": "记录谁负责研究、谁负责原型，可以避免团队陷入混乱。",
+            "body": [
+              "创业团队里不只有一个“领袖”。有的人擅长分析数据，有的人能把想法转化成形象的故事，也有人注重把行动落到日程表和资源上。",
+              "尝试回顾最近一次你参与的项目：你承担了什么角色？你想尝试新的分工吗？写下一个你想练习的角色，并约一个同伴一起完成微挑战。"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-cards",
+      "layout": "full",
+      "blocks": [
+        {
+          "id": "b-flip",
+          "type": "flip-cards",
+          "data": {
+            "eyebrow": "角色练习",
+            "title": "翻转卡片，找到你的超级能力",
+            "description": "先思考自己会如何回应卡片上的情境，再翻面确认提示。记下最符合你的那一条。",
+            "cards": [
+              {
+                "prompt": "用户访谈时同伴都沉默，你会怎么做？",
+                "insight": "你可以主动提问、引导对话，并用倾听技巧挖掘更多细节。"
+              },
+              {
+                "prompt": "提交原型的截止日提前了，你的第一反应是？",
+                "insight": "你擅长拆分任务、快速行动，并提醒团队聚焦最重要的功能。"
+              },
+              {
+                "prompt": "导师提出尖锐问题，你如何回答？",
+                "insight": "你能用数据和故事回应质疑，把价值主张解释得清楚且有说服力。"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-summary",
+      "layout": "full",
+      "blocks": [
+        {
+          "id": "b-summary",
+          "type": "section-card",
+          "data": {
+            "variant": "brand-gradient",
+            "eyebrow": "行动清单",
+            "title": "用一个小挑战检验你的特质",
+            "description": "挑选一个真实的校园或社区问题，设计 3 个可以在一周内完成的小实验。记下你需要的资源，并邀请同伴一起参与。",
+            "align": "left"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-cta",
+      "layout": "full",
+      "blocks": [
+        {
+          "id": "b-cta",
+          "type": "section-card",
+          "data": {
+            "variant": "white-cta",
+            "title": "记录你的发现",
+            "description": "把今天识别出的创业特质写进学习日志，并为自己设定一个在现实生活中运用它的机会。",
+            "align": "center",
+            "ctas": [
+              {
+                "label": "填写反思表",
+                "href": "/activities/reflection"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

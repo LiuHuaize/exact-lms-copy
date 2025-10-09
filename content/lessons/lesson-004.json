@@ -1,0 +1,180 @@
+{
+  "id": "lesson-004",
+  "title": "更进一步",
+  "sections": [
+    {
+      "id": "sec-hero",
+      "layout": "full",
+      "blocks": [
+        {
+          "id": "b-hero",
+          "type": "banner",
+          "data": {
+            "eyebrow": "第 4 课，共 4 课",
+            "title": "更进一步",
+            "subtitle": "把你的灵感带往现实世界，规划下一次行动。",
+            "topRightLabel": "完成度",
+            "bgImage": "https://images.unsplash.com/photo-1529101091764-c3526daf38fe?auto=format&fit=crop&w=2000&q=80"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-goal",
+      "layout": "single",
+      "blocks": [
+        {
+          "id": "b-goal",
+          "type": "rich-text",
+          "data": {
+            "content": "# 你的行动路线图\\n\\n1. 选择一个最想解决的情境。\\n2. 用 3 句话重新讲述你的电梯演讲。\\n3. 规划一个可以在 14 天内完成的实验。\\n\\n> 记住：小而真实的行动，胜过完美但遥远的计划。",
+            "align": "left",
+            "maxWidth": "md"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-progress",
+      "layout": "two-col",
+      "blocks": [
+        {
+          "id": "b-progress",
+          "type": "image-with-list",
+          "data": {
+            "eyebrow": "进度追踪",
+            "title": "14 天微实验清单",
+            "description": "挑选最适合你的三个行动，每完成一项就打勾。",
+            "items": [
+              "访谈 3 位潜在用户或受益者，验证他们的真实需求。",
+              "制作一个低成本原型（演示文稿、模型或服务流程），并邀请至少 2 次试用反馈。",
+              "纪录数据：拍照或写下你观察到的结果，并对照预期做出调整。"
+            ],
+            "image": {
+              "url": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80",
+              "alt": "Student planning with laptop"
+            },
+            "caption": "用电子表格或习惯追踪器记录你的每一步，形成持续迭代的节奏。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-mentor",
+      "layout": "two-col",
+      "blocks": [
+        {
+          "id": "b-mentor",
+          "type": "image-with-text",
+          "data": {
+            "layout": "image-right",
+            "image": {
+              "url": "https://images.unsplash.com/photo-1529694157871-0e7dc04d05ea?auto=format&fit=crop&w=900&q=80",
+              "alt": "Mentor guiding students"
+            },
+            "caption": "把问题写在便利贴上，导师对话时更容易聚焦。",
+            "body": [
+              "邀请一位导师、老师或家长成为你的“创意伙伴”。提前把你遇到的挑战写成三个具体问题，例如“我们如何在不增加成本的情况下，让更多同学体验原型？”",
+              "在交流后，立刻记录获得的建议，决定哪些要尝试、哪些要暂存。对任何“需要更多数据”的建议，安排下一次实验来验证。"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-video",
+      "layout": "full",
+      "blocks": [
+        {
+          "id": "b-video",
+          "type": "media-video",
+          "data": {
+            "eyebrow": "同伴示范",
+            "title": "一段 90 秒的电梯演讲示例",
+            "description": [
+              "观看两位同学如何用简洁的结构介绍他们的创意、证据和下一步需求。",
+              "思考他们在讲述时如何运用肢体语言、语速与数据支撑。"
+            ],
+            "tags": ["演讲技巧", "实战示例"],
+            "meta": "时长 1.5 分钟 · 可循环播放",
+            "video": {
+              "src": "https://cdn.coverr.co/videos/coverr-young-entrepreneurs-preparing-a-pitch-4599/1080p.mp4",
+              "poster": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1600&q=80"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-accordion",
+      "layout": "full",
+      "blocks": [
+        {
+          "id": "b-accordion",
+          "type": "accordion-tips",
+          "data": {
+            "eyebrow": "扩展挑战",
+            "title": "准备好迈向更大的舞台了吗？",
+            "description": "挑选一到两条建议尝试，完成后把成果上传到学习日志中。",
+            "items": [
+              {
+                "id": "tip-community",
+                "title": "举办微型展示会",
+                "content": "在班级或社团中设置一个 15 分钟的展示角，展示你的原型并收集即时票选。"
+              },
+              {
+                "id": "tip-digital",
+                "title": "发布线上故事",
+                "content": "把你的电梯演讲录成短视频，发给 3 位潜在支持者，征求他们最真实的提问。"
+              },
+              {
+                "id": "tip-impact",
+                "title": "设计影响力指标",
+                "content": "列出 3 个你想追踪的成果，例如“参与人数”“节省时间”“情绪变化”，下一次迭代时对照检验。"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-celebrate",
+      "layout": "full",
+      "blocks": [
+        {
+          "id": "b-celebrate",
+          "type": "section-card",
+          "data": {
+            "variant": "brand-gradient",
+            "eyebrow": "恭喜完成",
+            "title": "把收获转化成你的创业档案",
+            "description": "整理今天的灵感、实验数据和故事，放进你的创业作品集中。它会成为你申请项目、竞赛或实习的亮点材料。",
+            "align": "center"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-cta",
+      "layout": "full",
+      "blocks": [
+        {
+          "id": "b-cta",
+          "type": "section-card",
+          "data": {
+            "variant": "white-cta",
+            "title": "下一站：真实世界",
+            "description": "挑选一个真实场域，把你的创意带出去。别忘了邀请一路支持你的伙伴，一起庆祝成果。",
+            "align": "center",
+            "ctas": [
+              {
+                "label": "创建作品集页面",
+                "href": "/portfolio/new"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

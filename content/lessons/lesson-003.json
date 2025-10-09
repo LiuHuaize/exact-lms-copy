@@ -1,0 +1,188 @@
+{
+  "id": "lesson-003",
+  "title": "你的创业特质",
+  "sections": [
+    {
+      "id": "sec-hero",
+      "layout": "full",
+      "blocks": [
+        {
+          "id": "b-hero",
+          "type": "banner",
+          "data": {
+            "eyebrow": "第 3 课，共 4 课",
+            "title": "你的创业特质",
+            "subtitle": "通过自我观察和练习，发掘你独特的创业优势。",
+            "topRightLabel": "今日计划",
+            "bgImage": "https://images.unsplash.com/photo-1518607692857-1d42e1a1f0b4?auto=format&fit=crop&w=2000&q=80"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-audio",
+      "layout": "single",
+      "blocks": [
+        {
+          "id": "b-audio",
+          "type": "media-audio",
+          "data": {
+            "eyebrow": "反思音频",
+            "title": "特质自诊断 · 引导练习",
+            "description": "闭上眼睛，跟随导师的提问回顾最近一次团队经历，想象如果重来一次你会如何发挥更大影响力。",
+            "progressPercent": 12,
+            "durationLabel": "2:36",
+            "speedLabel": "1x",
+            "listLabel": "音频目录",
+            "primaryActionLabel": "播放练习"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-reflect",
+      "layout": "single",
+      "blocks": [
+        {
+          "id": "b-reflect",
+          "type": "rich-text",
+          "data": {
+            "content": "## 反思提示\\n\\n- **在团队中你最常做的事情是什么？** 是发起讨论、绘制草图、写下计划，还是安静地观察？\\n- **别人如何描述你的贡献？** 找一个值得信任的同伴，实现彼此互评。\\n- **如果让你再做一次，你想尝试什么新角色？** 列出你需要学习的技能或可以求助的人。",
+            "align": "left",
+            "maxWidth": "lg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-story",
+      "layout": "two-col",
+      "blocks": [
+        {
+          "id": "b-story",
+          "type": "image-with-text",
+          "data": {
+            "layout": "image-left",
+            "image": {
+              "url": "https://images.unsplash.com/photo-1531988042231-d39cea0f0d9c?auto=format&fit=crop&w=900&q=80",
+              "alt": "Student sharing story"
+            },
+            "caption": "将你的故事写成一张体验卡片，帮助队友快速理解你的想法。",
+            "body": [
+              "羽彤在学校的可持续发展俱乐部中负责对外沟通。她发现自己擅长把复杂议题讲成朋友们听得懂的语言。",
+              "当团队想要推广新的环保应用时，她设计了“7 天绿色挑战”，让同学只需在网站上选择自己想改变的一项习惯。凭借对故事结构的敏感，她帮助团队在开放日招募了第一批测试用户。",
+              "阅读羽彤的案例后，想想你是否也有类似的天赋？你愿意在下一次活动中尝试把它放大吗？"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-checklist",
+      "layout": "two-col",
+      "blocks": [
+        {
+          "id": "b-checklist",
+          "type": "image-with-list",
+          "data": {
+            "eyebrow": "自我观察",
+            "title": "三步识别你的特质组合",
+            "description": "边阅读边在笔记中加粗最能代表你的词语。",
+            "items": [
+              "写下你最享受的学习或项目经历，圈出你做过的具体动作。",
+              "请两位同伴各写一句话，描述你在合作中的独特贡献。",
+              "挑选一个想深入的特质，规划一个 20 分钟的小练习来强化它。"
+            ],
+            "image": {
+              "url": "https://images.unsplash.com/photo-1462396881884-de2c07cb95ed?auto=format&fit=crop&w=900&q=80",
+              "alt": "Sticky notes on wall"
+            },
+            "caption": "把观察写在便利贴上，按“已经擅长”“想尝试”两个区域归类。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-drag",
+      "layout": "full",
+      "blocks": [
+        {
+          "id": "b-drag",
+          "type": "drag-match",
+          "data": {
+            "eyebrow": "配对挑战",
+            "title": "把特质与行动匹配起来",
+            "description": "将下方行动与最能体现它的特质配对，思考自己落在哪一个象限。",
+            "options": [
+              { "id": "prototype", "label": "把想法画成流程图，并邀朋友体验", "targetId": "maker" },
+              { "id": "mentor", "label": "倾听受访者故事，持续追问“为什么”", "targetId": "listener" },
+              { "id": "pitch", "label": "设置故事节点，邀评委在关键时刻想像画面", "targetId": "storyteller" }
+            ],
+            "targets": [
+              { "id": "maker", "title": "创造者", "description": "喜欢动手测试，边做边学。" },
+              { "id": "listener", "title": "洞察者", "description": "善于提问和观察，理解真实需求。" },
+              { "id": "storyteller", "title": "讲述者", "description": "能把抽象创意讲得鲜活有趣。" }
+            ],
+            "successMessage": "配对完成！记录你想继续练习的特质。",
+            "failureMessage": "再想想：哪种行动更能代表这个特质？",
+            "footerNote": "拍下你的结果，分享到班级讨论区。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-accordion",
+      "layout": "full",
+      "blocks": [
+        {
+          "id": "b-accordion",
+          "type": "accordion-tips",
+          "data": {
+            "eyebrow": "延伸练习",
+            "title": "展开建议，让特质持续发光",
+            "description": "每完成一条建议，就在笔记上写下对应的下一步动作。",
+            "items": [
+              {
+                "id": "tip-note",
+                "title": "启动“能量记录本”",
+                "content": "每天写下一个让你兴奋或充满能量的瞬间，三天后回顾它们之间的共通点。"
+              },
+              {
+                "id": "tip-partner",
+                "title": "寻找互补搭档",
+                "content": "邀请一位擅长与你不同技能的同学，约定在下一次项目中互相示范彼此的长处。"
+              },
+              {
+                "id": "tip-share",
+                "title": "制作特质明信片",
+                "content": "把自己的关键特质写成一句话，贴在学习角落里提醒自己：今天我要如何使用它？"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sec-cta",
+      "layout": "full",
+      "blocks": [
+        {
+          "id": "b-cta",
+          "type": "section-card",
+          "data": {
+            "variant": "white-cta",
+            "title": "分享你的特质组合",
+            "description": "将今天的成果整理成一个 3 分钟的小演讲，邀请同伴给予提问与祝福。",
+            "align": "center",
+            "ctas": [
+              {
+                "label": "准备演讲提纲",
+                "href": "/activities/outlines"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

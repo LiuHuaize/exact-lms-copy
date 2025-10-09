@@ -4,6 +4,7 @@ import type { BlockNode, Section } from '@/content/types'
 import { LessonRenderer } from '@/renderers/LessonRenderer'
 import { BlockRegistry, type BlockPlugin } from '@/content/registry'
 import { validateLessonDocument, type LessonDocument } from '@/content/schema'
+import { lessonManifest, resolveLessonAsset } from '@/content/lessonManifest'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Card } from '@/components/ui/card'
@@ -20,35 +21,93 @@ const Editor: React.FC = () => {
   const [sections, setSections] = useState<Section[]>([])
   const [selected, setSelected] = useState<SelectedRef | null>(null)
 
-  const contentPath = `/content/${lessonId ?? 'lesson-001'}.json`
+  const fallbackLesson = lessonManifest[0]
+  const fallbackLessonId = fallbackLesson?.id ?? 'lesson-001'
+  const normalizedLessonId = typeof lessonId === 'string' ? lessonId.trim() : ''
+
+  const fetchCandidates = useMemo(() => {
+    const seen = new Set<string>()
+    const entries: { lessonId: string; url: string }[] = []
+
+    const push = (idValue: string, url?: string) => {
+      if (!idValue || !url || seen.has(url)) return
+      seen.add(url)
+      entries.push({ lessonId: idValue, url })
+    }
+
+    if (normalizedLessonId) {
+      push(normalizedLessonId, resolveLessonAsset(normalizedLessonId))
+      push(normalizedLessonId, `/content/${normalizedLessonId}.json`)
+    }
+
+    if (fallbackLesson) {
+      push(fallbackLesson.id, fallbackLesson.assetUrl)
+      push(fallbackLesson.id, `/content/${fallbackLesson.id}.json`)
+    }
+
+    return entries
+  }, [fallbackLesson, normalizedLessonId])
 
   useEffect(() => {
-    fetch(contentPath)
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        return res.json()
-      })
-      .then((json: unknown) => {
-        const result = validateLessonDocument(json)
-        if (!result.success) {
-          console.group('[Editor] Lesson JSON validation issues')
-          result.issues.forEach((i) => console.warn(`${i.level.toUpperCase()}: ${i.message}`, i.path))
-          console.groupEnd()
-        }
-        if (result.data) {
-          setDoc(result.data)
-          setSections(result.data.sections)
-        } else {
+    let cancelled = false
+
+    const load = async () => {
+      for (const candidate of fetchCandidates) {
+        try {
+          const res = await fetch(candidate.url)
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`)
+          }
+          const json: unknown = await res.json()
+          const result = validateLessonDocument(json)
+          if (!result.success) {
+            console.group('[Editor] Lesson JSON validation issues')
+            result.issues.forEach((i) => console.warn(`${i.level.toUpperCase()}: ${i.message}`, i.path))
+            console.groupEnd()
+          }
+
+          if (cancelled) return
+
+          if (result.data) {
+            setDoc(result.data)
+            setSections(result.data.sections)
+            console.info('[Editor] Lesson JSON loaded', { source: candidate.url, lessonId: result.data.id })
+            return
+          }
+
           type MaybeLesson = { id?: string; title?: string; sections?: unknown }
           const maybe = json as MaybeLesson
-          if (Array.isArray(maybe.sections)) {
-            setDoc({ id: maybe.id ?? 'unknown', title: maybe.title ?? '', sections: maybe.sections as Section[] })
-            setSections(maybe.sections as Section[])
+          if (Array.isArray(maybe.sections) && !cancelled) {
+            const fallbackDoc: LessonDocument = {
+              id: maybe.id ?? candidate.lessonId ?? 'unknown',
+              title: maybe.title ?? '',
+              sections: maybe.sections as Section[],
+            }
+            setDoc(fallbackDoc)
+            setSections(fallbackDoc.sections)
+            console.info('[Editor] Loaded lesson JSON with relaxed shape', {
+              source: candidate.url,
+              lessonId: fallbackDoc.id,
+            })
+            return
           }
+        } catch (error) {
+          const err = error instanceof Error ? error : new Error(String(error))
+          console.warn('[Editor] Failed to load lesson JSON candidate', { candidate, error: err })
         }
-      })
-      .catch((err) => console.error('[Editor] Failed to load lesson JSON', err))
-  }, [contentPath])
+      }
+
+      if (!cancelled) {
+        console.error('[Editor] Exhausted all lesson JSON candidates without success', fetchCandidates)
+      }
+    }
+
+    void load()
+
+    return () => {
+      cancelled = true
+    }
+  }, [fetchCandidates])
 
   const selectedBlock: { node: BlockNode; plugin?: BlockPlugin<unknown> } | null = useMemo(() => {
     if (!selected) return null
@@ -166,9 +225,10 @@ const Editor: React.FC = () => {
   }
 
   const exportJson = () => {
-    const name = `${lessonId ?? doc?.id ?? 'lesson'}.json`
+    const inferredId = (doc?.id ?? normalizedLessonId) || fallbackLessonId || 'lesson'
+    const name = `${inferredId}.json`
     const payload: LessonDocument = {
-      id: doc?.id ?? (lessonId ?? 'lesson'),
+      id: inferredId,
       title: doc?.title ?? '',
       sections,
     }
@@ -206,10 +266,16 @@ const Editor: React.FC = () => {
     <div className="min-h-screen bg-muted flex flex-col">
       <header className="bg-white border-b">
         <div className="px-6 py-3 flex items-center gap-3 justify-between">
-          <div className="font-semibold">课程编辑 · {doc?.title ?? lessonId}</div>
+          <div className="font-semibold">
+            课程编辑 · {doc?.title || doc?.id || normalizedLessonId || fallbackLessonId || '未命名课程'}
+          </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" asChild>
-              <a href={`/activities/${doc?.id ?? lessonId ?? 'demo'}/learn`} target="_blank" rel="noreferrer">
+              <a
+                href={`/activities/${(doc?.id ?? normalizedLessonId) || fallbackLessonId || 'demo'}/learn`}
+                target="_blank"
+                rel="noreferrer"
+              >
                 学生视角预览
               </a>
             </Button>
