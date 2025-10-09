@@ -19,6 +19,7 @@ export const SectionSchema = z.object({
   id: z.string(),
   title: z.string().optional(),
   layout: z.enum(['single', 'two-col', 'full']).optional(),
+  visibility: VisibilitySchema.optional(),
   blocks: z.array(BlockNodeBaseSchema),
 })
 
@@ -93,4 +94,3 @@ export function validateSections(sections: unknown): { success: boolean; section
   const res = validateLessonDocument(doc)
   return { success: res.success, sections: res.data?.sections as Section[], issues: res.issues }
 }
-

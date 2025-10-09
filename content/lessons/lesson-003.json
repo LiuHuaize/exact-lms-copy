@@ -14,7 +14,7 @@
             "title": "你的创业特质",
             "subtitle": "通过自我观察和练习，发掘你独特的创业优势。",
             "topRightLabel": "今日计划",
-            "bgImage": "https://images.unsplash.com/photo-1518607692857-1d42e1a1f0b4?auto=format&fit=crop&w=2000&q=80"
+            "bgImage": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=2000&q=80"
           }
         }
       ]
@@ -49,7 +49,8 @@
           "data": {
             "content": "## 反思提示\\n\\n- **在团队中你最常做的事情是什么？** 是发起讨论、绘制草图、写下计划，还是安静地观察？\\n- **别人如何描述你的贡献？** 找一个值得信任的同伴，实现彼此互评。\\n- **如果让你再做一次，你想尝试什么新角色？** 列出你需要学习的技能或可以求助的人。",
             "align": "left",
-            "maxWidth": "lg"
+            "maxWidth": "lg",
+            "variant": "card"
           }
         }
       ]
@@ -64,7 +65,7 @@
           "data": {
             "layout": "image-left",
             "image": {
-              "url": "https://images.unsplash.com/photo-1531988042231-d39cea0f0d9c?auto=format&fit=crop&w=900&q=80",
+              "url": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80",
               "alt": "Student sharing story"
             },
             "caption": "将你的故事写成一张体验卡片，帮助队友快速理解你的想法。",

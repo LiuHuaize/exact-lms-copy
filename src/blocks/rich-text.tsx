@@ -11,6 +11,7 @@ export const RichTextSchema = z.object({
   content: z.string().min(1),
   align: z.enum(['left', 'center']).default('left'),
   maxWidth: z.enum(['sm', 'md', 'lg', 'xl']).default('lg'),
+  variant: z.enum(['plain', 'card']).default('plain'),
 })
 
 export type RichTextData = z.infer<typeof RichTextSchema>
@@ -116,7 +117,7 @@ const RichTextRender: React.FC<{ data: RichTextData }> = ({ data }) => {
     .map((block) => block.trim())
     .filter(Boolean)
 
-  return (
+  const content = (
     <div
       className={cn(
         'space-y-6',
@@ -128,6 +129,18 @@ const RichTextRender: React.FC<{ data: RichTextData }> = ({ data }) => {
       {blocks.map((block, index) => renderBlock(block, index))}
     </div>
   )
+
+  if (data.variant === 'card') {
+    return (
+      <div className="max-w-5xl mx-auto">
+        <div className="bg-white rounded-[32px] shadow-xl border border-muted-foreground/10 px-10 py-12 lg:px-14 lg:py-14">
+          {content}
+        </div>
+      </div>
+    )
+  }
+
+  return content
 }
 
 export const RichTextPlugin: BlockPlugin<RichTextData> = {
@@ -139,6 +152,7 @@ export const RichTextPlugin: BlockPlugin<RichTextData> = {
     content: '# 小节标题\n\n这是正文段落，可以使用 **加粗**、*斜体* 或 `代码` 高亮。',
     align: 'left',
     maxWidth: 'lg',
+    variant: 'plain',
   },
   Render: RichTextRender,
   Inspector: ({ value, onChange }) => {
@@ -171,6 +185,13 @@ export const RichTextPlugin: BlockPlugin<RichTextData> = {
               <option value="xl">xl</option>
             </select>
           </div>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="variant">样式</Label>
+          <select id="variant" className="w-full border rounded-md px-3 py-2" {...form.register('variant')}>
+            <option value="plain">无背景</option>
+            <option value="card">卡片样式</option>
+          </select>
         </div>
       </form>
     )

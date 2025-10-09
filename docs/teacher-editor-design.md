@@ -239,5 +239,15 @@ Editor 侧属性：内容（eyebrow/title/description）、主题预设/渐变�
 
 ---
 
-如需，我可以按本文档路线先提交 `section-card` 的类型与渲染骨架，保持现有页面视觉与行为不变，仅把数据抽出为 JSON，以便你快速验证工作方式。
+## 12. 近期执行步骤（针对当前进展）
 
+1. **章节设置 Inspector：** 在 Editor 右侧面板补充 Section 级字段（标题、layout、可见性），并确保写回 `sections` 状态。
+2. **SectionCard 扩展：** 按设计稿扩充 schema（主题预设、间距、CTA 样式），更新渲染与 Inspector 控件。
+3. **校验提示 UI：** 将 `validateLessonDocument` 返回的 issues 以列表形式展示在 Editor，帮助教师快速定位问题。
+4. **拖拽排序体验：** 引入 dnd-kit，实现章节与模块的拖拽排序，替代现有按钮调序。
+5. **表单生成抽象：** 提炼通用 schema→控件映射工具，减少每个 Block Inspector 的重复代码。
+6. **草稿/发布接入：** 设计并接入后端草稿、发布与版本历史接口，完善导出/发布流程。
+
+---
+
+如需，我可以按本文档路线先提交 `section-card` 的类型与渲染骨架，保持现有页面视觉与行为不变，仅把数据抽出为 JSON，以便你快速验证工作方式。

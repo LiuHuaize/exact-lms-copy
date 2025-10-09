@@ -9,6 +9,10 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Card } from '@/components/ui/card'
 import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { useForm } from 'react-hook-form'
 
 type SelectedRef = {
   sectionIndex: number
@@ -20,6 +24,7 @@ const Editor: React.FC = () => {
   const [doc, setDoc] = useState<LessonDocument | null>(null)
   const [sections, setSections] = useState<Section[]>([])
   const [selected, setSelected] = useState<SelectedRef | null>(null)
+  const [focusedSectionIndex, setFocusedSectionIndex] = useState<number | null>(null)
 
   const fallbackLesson = lessonManifest[0]
   const fallbackLessonId = fallbackLesson?.id ?? 'lesson-001'
@@ -109,6 +114,19 @@ const Editor: React.FC = () => {
     }
   }, [fetchCandidates])
 
+  useEffect(() => {
+    if (!sections.length) {
+      setFocusedSectionIndex(null)
+      return
+    }
+    setFocusedSectionIndex((prev) => {
+      if (prev !== null && prev >= 0 && prev < sections.length) {
+        return prev
+      }
+      return 0
+    })
+  }, [sections])
+
   const selectedBlock: { node: BlockNode; plugin?: BlockPlugin<unknown> } | null = useMemo(() => {
     if (!selected) return null
     const s = sections[selected.sectionIndex]
@@ -142,7 +160,10 @@ const Editor: React.FC = () => {
 
   const handleSelectById = (id: string) => {
     const ref = idIndexMap.get(id)
-    if (ref) setSelected(ref)
+    if (ref) {
+      setFocusedSectionIndex(ref.sectionIndex)
+      setSelected(ref)
+    }
   }
 
   const pluginList = useMemo(() => Object.values(BlockRegistry), [])
@@ -172,6 +193,11 @@ const Editor: React.FC = () => {
         return { ...sec, blocks }
       })
     })
+    if (selected) {
+      setFocusedSectionIndex(selected.sectionIndex)
+    } else {
+      setFocusedSectionIndex((prev) => (prev !== null ? prev : 0))
+    }
   }
 
   const removeSelected = () => {
@@ -205,6 +231,8 @@ const Editor: React.FC = () => {
   const addSection = () => {
     const id = `sec-${Math.random().toString(36).slice(2, 6)}`
     setSections((prev) => [...prev, { id, title: undefined, layout: 'full', blocks: [] }])
+    setSelected(null)
+    setFocusedSectionIndex(sections.length)
   }
 
   const moveSection = (index: number, dir: -1 | 1) => {
@@ -217,11 +245,23 @@ const Editor: React.FC = () => {
       return next
     })
     setSelected((sel) => (sel && sel.sectionIndex === index ? { ...sel, sectionIndex: sel.sectionIndex + dir } : sel))
+    setFocusedSectionIndex((prev) => {
+      if (prev === null) return prev
+      if (prev === index) return index + dir
+      if (prev === index + dir) return prev - dir
+      return prev
+    })
   }
 
   const deleteSection = (index: number) => {
     setSections((prev) => prev.filter((_, i) => i !== index))
     setSelected((sel) => (sel && sel.sectionIndex === index ? null : sel))
+    setFocusedSectionIndex((prev) => {
+      if (prev === null) return prev
+      if (prev === index) return null
+      if (prev > index) return prev - 1
+      return prev
+    })
   }
 
   const exportJson = () => {
@@ -260,6 +300,67 @@ const Editor: React.FC = () => {
         }
       })
       .catch((e) => console.error('[Editor] Import failed', e))
+  }
+
+  const updateSectionMeta = (sectionIndex: number, updates: Partial<Section>) => {
+    setSections((prev) => {
+      let mutated = false
+      const nextSections = prev.map((sec, si) => {
+        if (si !== sectionIndex) return sec
+
+        let result = sec
+        const ensureClone = () => {
+          if (result === sec) {
+            result = { ...sec }
+          }
+        }
+
+        if ('title' in updates) {
+          const nextTitle = updates.title
+          const currentTitle = 'title' in sec ? sec.title : undefined
+          if (currentTitle !== nextTitle) {
+            ensureClone()
+            if (nextTitle === undefined || nextTitle === '') {
+              delete result.title
+            } else {
+              result.title = nextTitle
+            }
+            mutated = true
+          }
+        }
+
+        if ('layout' in updates) {
+          const nextLayout = updates.layout
+          if (sec.layout !== nextLayout) {
+            ensureClone()
+            if (!nextLayout) {
+              delete result.layout
+            } else {
+              result.layout = nextLayout
+            }
+            mutated = true
+          }
+        }
+
+        if ('visibility' in updates) {
+          const nextVisibility = normalizeVisibility(updates.visibility)
+          const currentVisibility = normalizeVisibility(sec.visibility)
+          if (!visibilityEqual(nextVisibility, currentVisibility)) {
+            ensureClone()
+            if (nextVisibility) {
+              result.visibility = nextVisibility
+            } else {
+              delete result.visibility
+            }
+            mutated = true
+          }
+        }
+
+        return result
+      })
+
+      return mutated ? nextSections : prev
+    })
   }
 
   return (
@@ -338,13 +439,28 @@ const Editor: React.FC = () => {
           </div>
           <div className="p-4 space-y-4">
             {sections.map((section, si) => (
-              <Card key={section.id} className="bg-muted/40 border-muted-foreground/20 shadow-sm">
+              <Card
+                key={section.id}
+                className={`bg-muted/40 border-muted-foreground/20 shadow-sm ${
+                  focusedSectionIndex === si ? 'border-clover-green ring-1 ring-clover-green/20' : ''
+                }`}
+              >
                 <div className="flex items-start justify-between px-4 py-3">
-                  <div>
+                  <div className="space-y-2">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">
                       章节 {si + 1}
                     </div>
                     <div className="text-sm text-muted-foreground truncate">{section.title ?? '未命名章节'}</div>
+                    <Button
+                      variant={focusedSectionIndex === si ? 'secondary' : 'ghost'}
+                      size="sm"
+                      onClick={() => {
+                        setFocusedSectionIndex(si)
+                        setSelected(null)
+                      }}
+                    >
+                      编辑章节
+                    </Button>
                   </div>
                   <div className="flex items-center gap-1">
                     <Button
@@ -383,7 +499,10 @@ const Editor: React.FC = () => {
                             ? 'border-clover-green bg-clover-green/10 text-foreground shadow-sm'
                             : 'border-transparent bg-white hover:border-muted-foreground/30'
                         }`}
-                        onClick={() => setSelected({ sectionIndex: si, blockIndex: bi })}
+                        onClick={() => {
+                          setFocusedSectionIndex(si)
+                          setSelected({ sectionIndex: si, blockIndex: bi })
+                        }}
                       >
                         <div className="text-sm font-medium">{plugin?.label ?? b.type}</div>
                         <div className="text-xs text-muted-foreground truncate">{b.id}</div>
@@ -408,33 +527,51 @@ const Editor: React.FC = () => {
 
         {/* Inspector */}
         <aside className="w-[360px] bg-white h-full overflow-y-auto border-l">
-          <div className="px-4 py-3 text-sm font-semibold text-muted-foreground">内容设置</div>
+          <div className="px-4 py-3 text-sm font-semibold text-muted-foreground">章节与内容设置</div>
           <Separator />
-          <div className="p-4">
-            {!selectedBlock && <div className="text-sm text-muted-foreground">请先在左侧选择一个模块，右侧才可编辑内容。</div>}
-            {selectedBlock && (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="text-sm font-semibold">{selectedBlock.plugin?.label ?? selectedBlock.node.type}</div>
-                  <div className="flex items-center gap-1">
-                    <Button size="icon" variant="ghost" onClick={() => moveSelected(-1)} aria-label="上移模块">
-                      <ChevronUp className="h-4 w-4" />
-                    </Button>
-                    <Button size="icon" variant="ghost" onClick={() => moveSelected(1)} aria-label="下移模块">
-                      <ChevronDown className="h-4 w-4" />
-                    </Button>
-                    <Button size="icon" variant="ghost" onClick={removeSelected} aria-label="删除模块">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+          <div className="p-4 space-y-6">
+            <div className="space-y-3">
+              <div className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">章节设置</div>
+              {focusedSectionIndex !== null && sections[focusedSectionIndex] ? (
+                <SectionInspector
+                  key={sections[focusedSectionIndex].id}
+                  section={sections[focusedSectionIndex]}
+                  onChange={(updates) => updateSectionMeta(focusedSectionIndex, updates)}
+                />
+              ) : (
+                <div className="text-sm text-muted-foreground">请选择或新增章节进行编辑。</div>
+              )}
+            </div>
+            <Separator />
+            <div className="space-y-3">
+              <div className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">模块内容</div>
+              {!selectedBlock && (
+                <div className="text-sm text-muted-foreground">在左侧选择模块后，可在此调整其内容。</div>
+              )}
+              {selectedBlock && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm font-semibold">{selectedBlock.plugin?.label ?? selectedBlock.node.type}</div>
+                    <div className="flex items-center gap-1">
+                      <Button size="icon" variant="ghost" onClick={() => moveSelected(-1)} aria-label="上移模块">
+                        <ChevronUp className="h-4 w-4" />
+                      </Button>
+                      <Button size="icon" variant="ghost" onClick={() => moveSelected(1)} aria-label="下移模块">
+                        <ChevronDown className="h-4 w-4" />
+                      </Button>
+                      <Button size="icon" variant="ghost" onClick={removeSelected} aria-label="删除模块">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
+                  {selectedBlock.plugin?.Inspector ? (
+                    <selectedBlock.plugin.Inspector value={selectedBlock.node.data} onChange={updateSelectedBlockData} />
+                  ) : (
+                    <div className="text-xs text-muted-foreground">此模块暂未提供 Inspector。</div>
+                  )}
                 </div>
-                {selectedBlock.plugin?.Inspector ? (
-                  <selectedBlock.plugin.Inspector value={selectedBlock.node.data} onChange={updateSelectedBlockData} />
-                ) : (
-                  <div className="text-xs text-muted-foreground">此模块暂未提供 Inspector。</div>
-                )}
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </aside>
       </div>
@@ -443,3 +580,138 @@ const Editor: React.FC = () => {
 }
 
 export default Editor
+
+type SectionInspectorValues = {
+  title: string
+  layout: '' | 'single' | 'two-col' | 'full'
+  roles: string
+  locale: string
+}
+
+const normalizeVisibility = (
+  visibility: Section['visibility'] | undefined
+): Section['visibility'] | undefined => {
+  if (!visibility) return undefined
+  const roles = visibility.roles?.map((role) => role.trim()).filter(Boolean)
+  const locale = visibility.locale?.map((loc) => loc.trim()).filter(Boolean)
+  const hasRoles = Boolean(roles && roles.length)
+  const hasLocale = Boolean(locale && locale.length)
+  if (!hasRoles && !hasLocale) return undefined
+  const result: Section['visibility'] = {}
+  if (hasRoles && roles) {
+    result.roles = roles
+  }
+  if (hasLocale && locale) {
+    result.locale = locale
+  }
+  return result
+}
+
+const visibilityEqual = (
+  a: Section['visibility'] | undefined,
+  b: Section['visibility'] | undefined
+): boolean => {
+  const normA = normalizeVisibility(a)
+  const normB = normalizeVisibility(b)
+  if (!normA && !normB) return true
+  if (!normA || !normB) return false
+  const rolesEqual = arrayShallowEqual(normA.roles ?? [], normB.roles ?? [])
+  const localesEqual = arrayShallowEqual(normA.locale ?? [], normB.locale ?? [])
+  return rolesEqual && localesEqual
+}
+
+const arrayShallowEqual = (a: string[], b: string[]): boolean => {
+  if (a.length !== b.length) return false
+  return a.every((item, index) => item === b[index])
+}
+
+const SectionInspector: React.FC<{ section: Section; onChange: (updates: Partial<Section>) => void }> = ({
+  section,
+  onChange,
+}) => {
+  const form = useForm<SectionInspectorValues>({
+    defaultValues: {
+      title: section.title ?? '',
+      layout: section.layout ?? '',
+      roles: section.visibility?.roles?.join(', ') ?? '',
+      locale: section.visibility?.locale?.join(', ') ?? '',
+    },
+    mode: 'onChange',
+  })
+
+  useEffect(() => {
+    form.reset({
+      title: section.title ?? '',
+      layout: section.layout ?? '',
+      roles: section.visibility?.roles?.join(', ') ?? '',
+      locale: section.visibility?.locale?.join(', ') ?? '',
+    })
+  }, [section, form])
+
+  useEffect(() => {
+    const subscription = form.watch((values) => {
+      const title = values.title.trim()
+      const layout = values.layout as Section['layout'] | ''
+      const roles = values.roles
+        .split(',')
+        .map((role) => role.trim())
+        .filter(Boolean)
+      const locales = values.locale
+        .split(',')
+        .map((loc) => loc.trim())
+        .filter(Boolean)
+      const visibility = normalizeVisibility({
+        roles: roles.length ? roles : undefined,
+        locale: locales.length ? locales : undefined,
+      })
+      onChange({
+        title: title ? title : undefined,
+        layout: layout ? layout : undefined,
+        visibility,
+      })
+    })
+    return () => subscription.unsubscribe()
+  }, [form, onChange])
+
+  return (
+    <form className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor={`section-title-${section.id}`}>章节标题</Label>
+        <Input id={`section-title-${section.id}`} placeholder="例如：导入" {...form.register('title')} />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor={`section-layout-${section.id}`}>布局</Label>
+        <select
+          id={`section-layout-${section.id}`}
+          className="w-full rounded-xl border border-muted-foreground/20 bg-white px-3 py-2 text-sm shadow-sm"
+          {...form.register('layout')}
+        >
+          <option value="">自动（遵循默认）</option>
+          <option value="full">整宽</option>
+          <option value="single">单列（中间卡片）</option>
+          <option value="two-col">双列布局</option>
+        </select>
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor={`section-roles-${section.id}`}>可见角色（可选）</Label>
+        <Textarea
+          id={`section-roles-${section.id}`}
+          rows={2}
+          placeholder="以逗号分隔，例如：teacher, mentor"
+          {...form.register('roles')}
+        />
+        <p className="text-[11px] text-muted-foreground">留空则对所有角色可见。</p>
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor={`section-locale-${section.id}`}>适用语言（可选）</Label>
+        <Textarea
+          id={`section-locale-${section.id}`}
+          rows={2}
+          placeholder="以逗号分隔，例如：zh-CN, en-US"
+          {...form.register('locale')}
+        />
+        <p className="text-[11px] text-muted-foreground">留空则使用所有语言版本。</p>
+      </div>
+    </form>
+  )
+}

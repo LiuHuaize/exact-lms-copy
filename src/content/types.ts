@@ -18,6 +18,7 @@ export type Section = {
   title?: string
   layout?: 'single' | 'two-col' | 'full'
   blocks: BlockNode[]
+  visibility?: Visibility
 }
 
 export type BlockNode = {
