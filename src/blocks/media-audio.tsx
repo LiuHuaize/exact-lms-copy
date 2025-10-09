@@ -69,7 +69,7 @@ const MediaAudioRender: React.FC<{ data: MediaAudioData }> = ({ data }) => {
 
 export const MediaAudioPlugin: BlockPlugin<MediaAudioData> = {
   type: 'media-audio',
-  label: 'Media Audio',
+  label: '音频卡片',
   version: 1,
   schema: MediaAudioSchema,
   defaultData: {
@@ -98,33 +98,33 @@ export const MediaAudioPlugin: BlockPlugin<MediaAudioData> = {
     return (
       <form className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="eyebrow">眉题</Label>
-          <Input id="eyebrow" {...form.register('eyebrow')} />
+          <Label htmlFor="eyebrow">顶部提示文字</Label>
+          <Input id="eyebrow" placeholder="例如：音频课程" {...form.register('eyebrow')} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="title">标题</Label>
-          <Input id="title" {...form.register('title', { required: true })} />
+          <Input id="title" placeholder="请输入音频标题" {...form.register('title', { required: true })} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="description">描述</Label>
-          <Textarea id="description" rows={3} {...form.register('description')} />
+          <Label htmlFor="description">简介</Label>
+          <Textarea id="description" rows={3} placeholder="用一句话告诉老师这里要做什么" {...form.register('description')} />
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-2">
-            <Label htmlFor="progressPercent">进度 %</Label>
+            <Label htmlFor="progressPercent">已播放百分比（0-100）</Label>
             <Input id="progressPercent" type="number" min={0} max={100} {...form.register('progressPercent', { valueAsNumber: true })} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="durationLabel">时长标签</Label>
-            <Input id="durationLabel" {...form.register('durationLabel')} />
+            <Label htmlFor="durationLabel">时长显示</Label>
+            <Input id="durationLabel" placeholder="例如：0:47" {...form.register('durationLabel')} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="speedLabel">倍速标签</Label>
-            <Input id="speedLabel" {...form.register('speedLabel')} />
+            <Label htmlFor="speedLabel">倍速显示</Label>
+            <Input id="speedLabel" placeholder="例如：1x" {...form.register('speedLabel')} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="listLabel">列表标签</Label>
-            <Input id="listLabel" {...form.register('listLabel')} />
+            <Label htmlFor="listLabel">播放列表按钮</Label>
+            <Input id="listLabel" placeholder="例如：播放列表" {...form.register('listLabel')} />
           </div>
         </div>
       </form>

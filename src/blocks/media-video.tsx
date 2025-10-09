@@ -76,7 +76,7 @@ const MediaVideoRender: React.FC<{ data: MediaVideoData }> = ({ data }) => {
 
 export const MediaVideoPlugin: BlockPlugin<MediaVideoData> = {
   type: 'media-video',
-  label: 'Media Video',
+  label: '视频卡片',
   version: 1,
   schema: MediaVideoSchema,
   defaultData: {
@@ -105,19 +105,19 @@ export const MediaVideoPlugin: BlockPlugin<MediaVideoData> = {
     return (
       <form className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="eyebrow">眉题</Label>
-          <Input id="eyebrow" {...form.register('eyebrow')} />
+          <Label htmlFor="eyebrow">顶部提示文字</Label>
+          <Input id="eyebrow" placeholder="例如：视频课堂" {...form.register('eyebrow')} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="title">标题</Label>
-          <Input id="title" {...form.register('title', { required: true })} />
+          <Input id="title" placeholder="请输入视频标题" {...form.register('title', { required: true })} />
         </div>
         <div className="space-y-2">
           <Label>描述段落</Label>
           <div className="space-y-2">
             {desc.fields.map((f, idx) => (
               <div key={f.id} className="flex items-end gap-2">
-                <Textarea rows={2} className="flex-1" {...form.register(`description.${idx}` as const)} />
+                <Textarea rows={2} className="flex-1" placeholder="请输入说明内容" {...form.register(`description.${idx}` as const)} />
                 <Button type="button" variant="ghost" onClick={() => desc.remove(idx)}>
                   删除
                 </Button>
@@ -131,7 +131,7 @@ export const MediaVideoPlugin: BlockPlugin<MediaVideoData> = {
           <div className="space-y-2">
             {tags.fields.map((f, idx) => (
               <div key={f.id} className="flex items-center gap-2">
-                <Input className="flex-1" {...form.register(`tags.${idx}` as const)} />
+                <Input className="flex-1" placeholder="例如：真实案例" {...form.register(`tags.${idx}` as const)} />
                 <Button type="button" variant="ghost" onClick={() => tags.remove(idx)}>
                   删除
                 </Button>
@@ -142,20 +142,20 @@ export const MediaVideoPlugin: BlockPlugin<MediaVideoData> = {
         </div>
         <div className="space-y-2">
           <Label htmlFor="meta">补充信息</Label>
-          <Input id="meta" {...form.register('meta')} />
+          <Input id="meta" placeholder="例如：时长 2 分钟 · 伴随字幕" {...form.register('meta')} />
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-2">
             <Label htmlFor="video.src">视频 URL</Label>
-            <Input id="video.src" {...form.register('video.src', { required: true })} />
+            <Input id="video.src" placeholder="请输入视频链接" {...form.register('video.src', { required: true })} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="video.type">MIME 类型</Label>
-            <Input id="video.type" {...form.register('video.type')} />
+            <Label htmlFor="video.type">文件类型（可选）</Label>
+            <Input id="video.type" placeholder="例如：video/mp4" {...form.register('video.type')} />
           </div>
           <div className="space-y-2 col-span-2">
             <Label htmlFor="video.poster">封面图</Label>
-            <Input id="video.poster" {...form.register('video.poster')} />
+            <Input id="video.poster" placeholder="请输入封面图片链接" {...form.register('video.poster')} />
           </div>
         </div>
       </form>

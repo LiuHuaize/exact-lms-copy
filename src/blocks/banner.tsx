@@ -51,7 +51,7 @@ const BannerRender: React.FC<{ data: BannerData }> = ({ data }) => {
 
 export const BannerPlugin: BlockPlugin<BannerData> = {
   type: 'banner',
-  label: 'Banner',
+  label: '课节横幅',
   version: 1,
   schema: BannerSchema,
   defaultData: {
@@ -79,24 +79,24 @@ export const BannerPlugin: BlockPlugin<BannerData> = {
     return (
       <form className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="eyebrow">眉题</Label>
-          <Input id="eyebrow" placeholder="第 1 课" {...form.register('eyebrow')} />
+          <Label htmlFor="eyebrow">顶部提示文字</Label>
+          <Input id="eyebrow" placeholder="例如：第 1 课，共 4 课" {...form.register('eyebrow')} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="title">标题</Label>
-          <Input id="title" placeholder="请输入标题" {...form.register('title', { required: true })} />
+          <Input id="title" placeholder="请输入主标题" {...form.register('title', { required: true })} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="subtitle">副标题</Label>
-          <Input id="subtitle" placeholder="补充说明" {...form.register('subtitle')} />
+          <Input id="subtitle" placeholder="补充一句课程描述" {...form.register('subtitle')} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="bgImage">背景图 URL</Label>
-          <Input id="bgImage" placeholder="https://..." {...form.register('bgImage', { required: true })} />
+          <Label htmlFor="bgImage">背景图链接</Label>
+          <Input id="bgImage" placeholder="请输入图片链接（https://）" {...form.register('bgImage', { required: true })} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="topRightLabel">右上角标签</Label>
-          <Input id="topRightLabel" placeholder="返回模块" {...form.register('topRightLabel')} />
+          <Label htmlFor="topRightLabel">右上角按钮文字</Label>
+          <Input id="topRightLabel" placeholder="例如：返回模块" {...form.register('topRightLabel')} />
         </div>
       </form>
     )

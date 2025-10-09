@@ -58,7 +58,7 @@ const AccordionTipsRender: React.FC<{ data: AccordionTipsData }> = ({ data }) =>
 
 export const AccordionTipsPlugin: BlockPlugin<AccordionTipsData> = {
   type: 'accordion-tips',
-  label: 'Accordion Tips',
+  label: '折叠提示',
   version: 1,
   schema: AccordionTipsSchema,
   defaultData: {
@@ -111,17 +111,22 @@ export const AccordionTipsPlugin: BlockPlugin<AccordionTipsData> = {
               <div key={f.id} className="rounded-md border p-3 space-y-2">
                 <div className="grid grid-cols-2 gap-2">
                   <div className="space-y-1">
-                    <Label htmlFor={`items.${idx}.id`}>ID</Label>
-                    <Input id={`items.${idx}.id`} {...form.register(`items.${idx}.id` as const)} />
+                    <Label htmlFor={`items.${idx}.id`}>条目标识（需唯一）</Label>
+                    <Input id={`items.${idx}.id`} placeholder="例如 tip-1" {...form.register(`items.${idx}.id` as const)} />
                   </div>
                   <div className="space-y-1">
-                    <Label htmlFor={`items.${idx}.title`}>标题</Label>
-                    <Input id={`items.${idx}.title`} {...form.register(`items.${idx}.title` as const)} />
+                    <Label htmlFor={`items.${idx}.title`}>小标题</Label>
+                    <Input id={`items.${idx}.title`} placeholder="例如：展开小贴士" {...form.register(`items.${idx}.title` as const)} />
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <Label htmlFor={`items.${idx}.content`}>内容</Label>
-                  <Textarea id={`items.${idx}.content`} rows={3} {...form.register(`items.${idx}.content` as const)} />
+                  <Label htmlFor={`items.${idx}.content`}>详细说明</Label>
+                  <Textarea
+                    id={`items.${idx}.content`}
+                    rows={3}
+                    placeholder="写下老师要提醒的细节"
+                    {...form.register(`items.${idx}.content` as const)}
+                  />
                 </div>
                 <div className="flex items-center justify-end">
                   <Button type="button" variant="ghost" onClick={() => items.remove(idx)}>

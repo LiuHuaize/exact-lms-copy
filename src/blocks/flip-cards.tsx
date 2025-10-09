@@ -1,6 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { z } from 'zod'
 import type { BlockPlugin } from '@/content/registry'
+import { useForm, useFieldArray } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
 
 export const FlipCardsSchema = z.object({
   eyebrow: z.string().optional(),
@@ -78,7 +84,7 @@ const FlipCardsRender: React.FC<{ data: FlipCardsData }> = ({ data }) => {
 
 export const FlipCardsPlugin: BlockPlugin<FlipCardsData> = {
   type: 'flip-cards',
-  label: 'Flip Cards',
+  label: '翻转卡片',
   version: 1,
   schema: FlipCardsSchema,
   defaultData: {
@@ -93,4 +99,78 @@ export const FlipCardsPlugin: BlockPlugin<FlipCardsData> = {
     ],
   },
   Render: FlipCardsRender,
+  Inspector: ({ value, onChange }) => {
+    const form = useForm<FlipCardsData>({
+      resolver: zodResolver(FlipCardsSchema),
+      defaultValues: value,
+      mode: 'onChange',
+    })
+    const cards = useFieldArray({ control: form.control, name: 'cards' })
+
+    useEffect(() => {
+      const subscription = form.watch((vals) => onChange(vals as FlipCardsData))
+      return () => subscription.unsubscribe()
+    }, [form, onChange])
+
+    const addCard = () => {
+      cards.append({
+        prompt: '新的问题',
+        insight: '对应的提示',
+      })
+    }
+
+    return (
+      <form className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="eyebrow">眉题</Label>
+          <Input id="eyebrow" placeholder="如：互动卡片" {...form.register('eyebrow')} />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="title">标题</Label>
+          <Input id="title" placeholder="请输入标题" {...form.register('title', { required: true })} />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="description">描述</Label>
+          <Textarea id="description" rows={3} placeholder="说明如何与卡片互动" {...form.register('description')} />
+        </div>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Label>卡片列表</Label>
+            <Button type="button" size="sm" variant="outline" onClick={addCard}>
+              添加
+            </Button>
+          </div>
+          <div className="space-y-3">
+            {cards.fields.map((field, idx) => (
+              <div key={field.id} className="rounded-md border p-3 space-y-3">
+                <div className="space-y-1">
+                  <Label htmlFor={`cards.${idx}.prompt`}>问题面文案</Label>
+                  <Textarea
+                    id={`cards.${idx}.prompt`}
+                    rows={2}
+                    placeholder="写给老师/学生的问题"
+                    {...form.register(`cards.${idx}.prompt` as const, { required: true })}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor={`cards.${idx}.insight`}>提示面文案</Label>
+                  <Textarea
+                    id={`cards.${idx}.insight`}
+                    rows={2}
+                    placeholder="翻转后展示的提示"
+                    {...form.register(`cards.${idx}.insight` as const, { required: true })}
+                  />
+                </div>
+                <div className="flex items-center justify-end">
+                  <Button type="button" variant="ghost" onClick={() => cards.remove(idx)}>
+                    删除
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </form>
+    )
+  },
 }

@@ -8,7 +8,7 @@ export const LessonRenderer: React.FC<{ sections: Section[]; selectedId?: string
     <>
       {sections.map((section) => (
         <section key={section.id} className="px-10 py-12">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-6xl mx-auto flex flex-col gap-12">
             {section.blocks.map((b) => {
               const isSelected = selectedId === b.id
               return (

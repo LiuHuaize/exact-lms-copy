@@ -65,7 +65,7 @@ const ImageWithTextRender: React.FC<{ data: ImageWithTextData }> = ({ data }) =>
 
 export const ImageWithTextPlugin: BlockPlugin<ImageWithTextData> = {
   type: 'image-with-text',
-  label: 'Image with Text',
+  label: '图文组合',
   version: 1,
   schema: ImageWithTextSchema,
   defaultData: {

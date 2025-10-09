@@ -1,6 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { z } from 'zod'
 import type { BlockPlugin } from '@/content/registry'
+import { useForm, useFieldArray } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
 
 export const DragMatchSchema = z.object({
   eyebrow: z.string().optional(),
@@ -145,7 +151,7 @@ const DragMatchRender: React.FC<{ data: DragMatchData }> = ({ data }) => {
 
 export const DragMatchPlugin: BlockPlugin<DragMatchData> = {
   type: 'drag-match',
-  label: 'Drag Match',
+  label: '拖拽匹配',
   version: 1,
   schema: DragMatchSchema,
   defaultData: {
@@ -165,4 +171,180 @@ export const DragMatchPlugin: BlockPlugin<DragMatchData> = {
     footerNote: '完成练习后记录收获。',
   },
   Render: DragMatchRender,
+  Inspector: ({ value, onChange }) => {
+    const form = useForm<DragMatchData>({
+      resolver: zodResolver(DragMatchSchema),
+      defaultValues: value,
+      mode: 'onChange',
+    })
+
+    const options = useFieldArray({ control: form.control, name: 'options' })
+    const targets = useFieldArray({ control: form.control, name: 'targets' })
+
+    useEffect(() => {
+      const subscription = form.watch((vals) => onChange(vals as DragMatchData))
+      return () => subscription.unsubscribe()
+    }, [form, onChange])
+
+    const targetList = form.watch('targets')
+
+    const appendTarget = () => {
+      targets.append({
+        id: `target-${Math.random().toString(36).slice(2, 6)}`,
+        title: '新目标',
+        description: '描述',
+      })
+    }
+
+    const appendOption = () => {
+      const fallbackTargetId = targetList?.[0]?.id ?? ''
+      options.append({
+        id: `option-${Math.random().toString(36).slice(2, 6)}`,
+        label: '新的选项',
+        targetId: fallbackTargetId,
+      })
+    }
+
+    return (
+      <form className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="eyebrow">眉题</Label>
+          <Input id="eyebrow" placeholder="如：拖拽练习" {...form.register('eyebrow')} />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="title">标题</Label>
+          <Input id="title" placeholder="请输入练习标题" {...form.register('title', { required: true })} />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="description">描述</Label>
+          <Textarea id="description" rows={3} placeholder="告诉老师如何完成这个匹配题" {...form.register('description')} />
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Label>目标列表（拖放区域）</Label>
+            <Button type="button" size="sm" variant="outline" onClick={appendTarget}>
+              添加目标
+            </Button>
+          </div>
+          <div className="space-y-3">
+            {targets.fields.map((field, idx) => (
+              <div key={field.id} className="rounded-md border p-3 space-y-3">
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="space-y-1">
+                    <Label htmlFor={`targets.${idx}.id`}>目标 ID</Label>
+                    <Input
+                      id={`targets.${idx}.id`}
+                      placeholder="需唯一，例如 target-1"
+                      {...form.register(`targets.${idx}.id` as const, { required: true })}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor={`targets.${idx}.title`}>标题</Label>
+                    <Input
+                      id={`targets.${idx}.title`}
+                      placeholder="例如：行动阶段"
+                      {...form.register(`targets.${idx}.title` as const, { required: true })}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor={`targets.${idx}.description`}>描述</Label>
+                  <Textarea
+                    id={`targets.${idx}.description`}
+                    rows={2}
+                    placeholder="提示学员拖入正确选项后看到的内容"
+                    {...form.register(`targets.${idx}.description` as const, { required: true })}
+                  />
+                </div>
+                <div className="flex items-center justify-end">
+                  <Button type="button" variant="ghost" onClick={() => targets.remove(idx)}>
+                    删除
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Label>选项列表（可拖动元素）</Label>
+            <Button type="button" size="sm" variant="outline" onClick={appendOption}>
+              添加选项
+            </Button>
+          </div>
+          <div className="space-y-3">
+            {options.fields.map((field, idx) => (
+              <div key={field.id} className="rounded-md border p-3 space-y-3">
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="space-y-1">
+                    <Label htmlFor={`options.${idx}.id`}>选项 ID</Label>
+                    <Input
+                      id={`options.${idx}.id`}
+                      placeholder="需唯一，例如 option-1"
+                      {...form.register(`options.${idx}.id` as const, { required: true })}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor={`options.${idx}.label`}>显示文字</Label>
+                    <Input
+                      id={`options.${idx}.label`}
+                      placeholder="例如：准备文案素材"
+                      {...form.register(`options.${idx}.label` as const, { required: true })}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor={`options.${idx}.targetId`}>对应目标 ID</Label>
+                  <select
+                    id={`options.${idx}.targetId`}
+                    className="w-full border rounded-md px-3 py-2"
+                    {...form.register(`options.${idx}.targetId` as const, { required: true })}
+                  >
+                    <option value="">请选择目标</option>
+                    {targetList?.map((target, tIdx) => (
+                      <option key={`${target.id}-${tIdx}`} value={target.id}>
+                        {target.id}（{target.title || '未命名'}）
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex items-center justify-end">
+                  <Button type="button" variant="ghost" onClick={() => options.remove(idx)}>
+                    删除
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="successMessage">正确反馈</Label>
+          <Textarea
+            id="successMessage"
+            rows={2}
+            placeholder="学员匹配正确后看到的反馈"
+            {...form.register('successMessage', { required: true })}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="failureMessage">错误反馈</Label>
+          <Textarea
+            id="failureMessage"
+            rows={2}
+            placeholder="学员匹配错误时的提醒"
+            {...form.register('failureMessage', { required: true })}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="footerNote">页脚提示</Label>
+          <Textarea id="footerNote" rows={2} placeholder="可选：补充提醒或总结" {...form.register('footerNote')} />
+        </div>
+      </form>
+    )
+  },
 }

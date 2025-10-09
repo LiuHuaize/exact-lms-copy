@@ -132,7 +132,7 @@ const RichTextRender: React.FC<{ data: RichTextData }> = ({ data }) => {
 
 export const RichTextPlugin: BlockPlugin<RichTextData> = {
   type: 'rich-text',
-  label: 'Rich Text',
+  label: '富文本内容',
   version: 1,
   schema: RichTextSchema,
   defaultData: {

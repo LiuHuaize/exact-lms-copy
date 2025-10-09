@@ -83,7 +83,7 @@ const SectionCardRender: React.FC<{ data: SectionCardData }> = ({ data }) => {
 
 export const SectionCardPlugin: BlockPlugin<SectionCardData> = {
   type: 'section-card',
-  label: 'Section Card',
+  label: '重点卡片',
   version: 1,
   schema: SectionCardSchema,
   defaultData: {
@@ -118,9 +118,9 @@ export const SectionCardPlugin: BlockPlugin<SectionCardData> = {
         <div className="space-y-2">
           <Label htmlFor="variant">样式</Label>
           <select id="variant" className="w-full border rounded-md px-3 py-2" {...form.register('variant')}>
-            <option value="plain">普通</option>
-            <option value="brand-gradient">品牌渐变</option>
-            <option value="white-cta">白色 CTA</option>
+            <option value="plain">基础样式</option>
+            <option value="brand-gradient">品牌渐变卡</option>
+            <option value="white-cta">白底行动卡</option>
           </select>
         </div>
 
@@ -149,8 +149,13 @@ export const SectionCardPlugin: BlockPlugin<SectionCardData> = {
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label>CTA 按钮</Label>
-            <Button type="button" size="sm" variant="outline" onClick={() => append({ label: '了解更多', href: '/' })}>
+            <Label>行动按钮</Label>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => append({ label: '了解更多', href: '/activities' })}
+            >
               添加
             </Button>
           </div>
@@ -158,12 +163,12 @@ export const SectionCardPlugin: BlockPlugin<SectionCardData> = {
             {fields.map((field, idx) => (
               <div key={field.id} className="grid grid-cols-12 gap-2 items-end">
                 <div className="col-span-5 space-y-1">
-                  <Label htmlFor={`ctas.${idx}.label`}>文案</Label>
+                  <Label htmlFor={`ctas.${idx}.label`}>按钮文字</Label>
                   <Input id={`ctas.${idx}.label`} {...form.register(`ctas.${idx}.label` as const)} />
                 </div>
                 <div className="col-span-6 space-y-1">
-                  <Label htmlFor={`ctas.${idx}.href`}>链接</Label>
-                  <Input id={`ctas.${idx}.href`} {...form.register(`ctas.${idx}.href` as const)} />
+                  <Label htmlFor={`ctas.${idx}.href`}>链接地址（可选）</Label>
+                  <Input id={`ctas.${idx}.href`} placeholder="例如 /activities 或 https://" {...form.register(`ctas.${idx}.href` as const)} />
                 </div>
                 <div className="col-span-1">
                   <Button type="button" variant="ghost" onClick={() => remove(idx)}>

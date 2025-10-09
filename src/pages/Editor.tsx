@@ -206,11 +206,11 @@ const Editor: React.FC = () => {
     <div className="min-h-screen bg-muted flex flex-col">
       <header className="bg-white border-b">
         <div className="px-6 py-3 flex items-center gap-3 justify-between">
-          <div className="font-semibold">Editor · {doc?.title ?? lessonId}</div>
+          <div className="font-semibold">课程编辑 · {doc?.title ?? lessonId}</div>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" asChild>
               <a href={`/activities/${doc?.id ?? lessonId ?? 'demo'}/learn`} target="_blank" rel="noreferrer">
-                预览学习端
+                学生视角预览
               </a>
             </Button>
             <label className="inline-flex items-center">
@@ -224,12 +224,16 @@ const Editor: React.FC = () => {
                   e.currentTarget.value = ''
                 }}
               />
-              <Button variant="outline" size="sm" onClick={(e) => (e.currentTarget.previousElementSibling as HTMLInputElement)?.click()}>
-                导入 JSON
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={(e) => (e.currentTarget.previousElementSibling as HTMLInputElement)?.click()}
+              >
+                导入 JSON 文件
               </Button>
             </label>
             <Button variant="default" size="sm" onClick={exportJson}>
-              导出 JSON
+              下载 JSON 文件
             </Button>
           </div>
         </div>
@@ -240,8 +244,8 @@ const Editor: React.FC = () => {
         <aside className="w-[320px] bg-white h-full overflow-y-auto border-r">
           <div className="px-5 py-4 border-b space-y-4">
             <div className="space-y-1">
-              <div className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">模块库</div>
-              <p className="text-xs text-muted-foreground">选择一个模块插入到当前选中区域。</p>
+              <div className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">内容模块</div>
+              <p className="text-xs text-muted-foreground">挑选模块后，会插入到当前选中的位置。</p>
             </div>
             <select
               className="w-full rounded-xl border border-muted-foreground/20 bg-white px-3 py-2 text-sm shadow-sm"
@@ -259,11 +263,11 @@ const Editor: React.FC = () => {
             </Button>
             <Separator />
             <div className="space-y-1">
-              <div className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">大纲</div>
-              <p className="text-xs text-muted-foreground">管理 Section 顺序与内容。</p>
+              <div className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">课程大纲</div>
+              <p className="text-xs text-muted-foreground">调整章节顺序或维护章节内容。</p>
             </div>
             <Button variant="outline" className="w-full gap-2" onClick={addSection}>
-              <Plus className="h-4 w-4" /> 新建 Section
+              <Plus className="h-4 w-4" /> 新增章节
             </Button>
           </div>
           <div className="p-4 space-y-4">
@@ -272,9 +276,9 @@ const Editor: React.FC = () => {
                 <div className="flex items-start justify-between px-4 py-3">
                   <div>
                     <div className="text-[11px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">
-                      SECTION {si + 1}
+                      章节 {si + 1}
                     </div>
-                    <div className="text-sm text-muted-foreground truncate">{section.title ?? '未命名 Section'}</div>
+                    <div className="text-sm text-muted-foreground truncate">{section.title ?? '未命名章节'}</div>
                   </div>
                   <div className="flex items-center gap-1">
                     <Button
@@ -321,7 +325,7 @@ const Editor: React.FC = () => {
                     )
                   })}
                   {section.blocks.length === 0 && (
-                    <div className="text-xs text-muted-foreground">空 Section，插入模块以开始编辑。</div>
+                    <div className="text-xs text-muted-foreground">本章节暂时没有内容，点击上方按钮插入模块。</div>
                   )}
                 </div>
               </Card>
@@ -338,10 +342,10 @@ const Editor: React.FC = () => {
 
         {/* Inspector */}
         <aside className="w-[360px] bg-white h-full overflow-y-auto border-l">
-          <div className="px-4 py-3 text-sm font-semibold text-muted-foreground">属性</div>
+          <div className="px-4 py-3 text-sm font-semibold text-muted-foreground">内容设置</div>
           <Separator />
           <div className="p-4">
-            {!selectedBlock && <div className="text-sm text-muted-foreground">选择左侧任意 Block 以编辑属性。</div>}
+            {!selectedBlock && <div className="text-sm text-muted-foreground">请先在左侧选择一个模块，右侧才可编辑内容。</div>}
             {selectedBlock && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
