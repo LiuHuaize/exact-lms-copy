@@ -135,7 +135,8 @@ Editor 侧属性：内容（eyebrow/title/description）、主题预设/渐变�
 - `banner`（斜切 Hero）：背景图/视频、覆盖色、不透明度、clip 角度；映射 `src/pages/ActivityLearn.tsx:210`、`src/pages/ActivityDetail.tsx:27`。
 - `rich-text`：Tiptap/Lexical 文档或 Markdown。
 - `image`：比例/圆角/焦点点位/alt。
-- `media-audio`、`media-video`：基础播放控制、字幕/文本稿。
+- `media-audio`：真实音频播放器（自定义按钮+进度条 UI），配置 `audio.src/type` 与时长/倍速/播放列表标签，可直接引用 `public/audio/*` 资源；保留进度条初始值字段，后续可扩展字幕/文本稿。
+- `media-video`：基础播放控制、字幕/文本稿。
 - `text-media-2col`：图文两列组合（参考 `src/pages/ActivityLearn.tsx:281`）。
 - `flip-cards`：`items[{front,back,media?}]`、翻转方式（参考 `:431`）。
 - `drag-match`：`targets`/`options`/`feedback` 与完整性校验（参考 `:478`）。
